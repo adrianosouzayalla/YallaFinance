@@ -1,0 +1,52 @@
+# Build .NET
+bin/
+obj/
+publish/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Segredos e configuracao local (nunca versionar)
+.env
+.env.*
+!.env.example
+frontend/.env.local
+*.pfx
+*.p12
+*.key
+*.pem
+
+# Frontend (Next.js / Node)
+node_modules/
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.vercel/
+frontend/tsconfig.tsbuildinfo
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.pnpm-debug.log*
+
+# Logs e temporarios
+*.log
+logs/
+.tmp/
+Temp/
+*.tmp
+
+# Backups e dumps de banco (o backup e entregue a parte, fora do repositorio)
+*.bak
+*.backup
+*.dump
+*.sql.gz
+
+# IDE e sistema operacional
+.vs/
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+Desktop.ini
+.DS_Store

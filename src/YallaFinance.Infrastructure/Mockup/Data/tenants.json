@@ -1,0 +1,47 @@
+[
+    {
+        "id":  "a30e2e53-51a7-f55f-8832-d9147e06bcc5",
+        "name":  "João da Silva",
+        "taxId":  "123.456.789-00",
+        "phone":  "+55 11 99999-1043",
+        "email":  "joao.silva@example.com",
+        "tenantId":  "7f5f4d4e-5c6a-4c1a-9c50-7e2f3b8d1a10",
+        "customerId":  "a30e2e53-51a7-f55f-8832-d9147e06bcc5"
+    },
+    {
+        "id":  "1389e133-98b0-e354-a4cc-8aca6913014f",
+        "name":  "Maria Souza",
+        "taxId":  "234.567.890-11",
+        "phone":  "+55 11 99999-1051",
+        "email":  "maria.souza@example.com",
+        "tenantId":  "7f5f4d4e-5c6a-4c1a-9c50-7e2f3b8d1a10",
+        "customerId":  "1389e133-98b0-e354-a4cc-8aca6913014f"
+    },
+    {
+        "id":  "df745b8e-5f0d-5151-83d2-5f1254815550",
+        "name":  "Pedro Lima",
+        "taxId":  "345.678.901-22",
+        "phone":  "+55 11 99999-1039",
+        "email":  "pedro.lima@example.com",
+        "tenantId":  "7f5f4d4e-5c6a-4c1a-9c50-7e2f3b8d1a10",
+        "customerId":  "df745b8e-5f0d-5151-83d2-5f1254815550"
+    },
+    {
+        "id":  "2574ab47-f89c-7f54-ae2c-abd07634482f",
+        "name":  "Ana Costa",
+        "taxId":  "456.789.012-33",
+        "phone":  "+55 11 99999-1055",
+        "email":  "ana.costa@example.com",
+        "tenantId":  "7f5f4d4e-5c6a-4c1a-9c50-7e2f3b8d1a10",
+        "customerId":  "2574ab47-f89c-7f54-ae2c-abd07634482f"
+    },
+    {
+        "id":  "c436b4da-75d9-3d52-82be-20ca0a06a7ad",
+        "name":  "Cliente Fleet Demo",
+        "taxId":  "567.890.123-44",
+        "phone":  "+55 11 99999-1066",
+        "email":  "fleet.customer@example.com",
+        "tenantId":  "3c2d1e0f-9a8b-47c6-b5d4-2f1e0a9b8c7d",
+        "customerId":  "c436b4da-75d9-3d52-82be-20ca0a06a7ad"
+    }
+]
