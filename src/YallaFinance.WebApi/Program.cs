@@ -19,6 +19,8 @@ Log.Logger = new LoggerConfiguration()
 try
 {
     var builder = WebApplication.CreateBuilder(args);
+    builder.WebHost.ConfigureKestrel(options =>
+        options.Limits.MaxRequestBodySize = YallaFinance.WebApi.Security.RequestBodyLimits.MaxBodyBytes);
 
     foreach (var key in new[] { "FinancialIntegrations:EvidenceDirectory" })
     {
@@ -56,7 +58,7 @@ try
             policy =>
             {
                 policy
-                    .WithOrigins("http://localhost:3000", "http://127.0.0.1:3000", "http://192.168.15.3:3000", "http://192.168.15.5:3000")
+                    .WithOrigins(YallaFinance.WebApi.Security.CorsOrigins.From(builder.Configuration))
                     .AllowAnyHeader()
                     .AllowAnyMethod();
             });
@@ -85,6 +87,11 @@ try
     var app = builder.Build();
 
     app.UseSerilogRequestLogging(PaymentRequestLogPath.ConfigureRequestLogging);
+    app.Use(async (context, next) =>
+    {
+        YallaFinance.WebApi.Security.SecurityResponseHeaders.AddToResponse(context.Response.Headers, app.Environment.IsProduction());
+        await next(context);
+    });
 
     if (app.Environment.IsDevelopment())
     {

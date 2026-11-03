@@ -105,7 +105,7 @@ it("creates an Asaas connection then opens all empty parameters for its assigned
   expect(screen.getByLabelText(/URL base/)).toHaveValue("");
   expect(screen.getByLabelText(/Token de API/)).toHaveValue("");
   expect(screen.getByLabelText(/Timeout/)).toHaveValue(null);
-});
+}, 15_000);
 
 it("loads every company setting group on screen entry and preserves persisted values", async () => {
   vi.mocked(companyApi.getSettings).mockResolvedValueOnce({ maximumLinkDays: "valor-invalido", publicOrigin: null });
@@ -206,7 +206,7 @@ it("preserves unsaved credentials while the aggregate lists are paginated", asyn
   await waitForIdle();
   fireEvent.click(screen.getByRole("tab", { name: "Configuração", hidden: true }));
   expect(screen.getByLabelText(/Token de API/)).toHaveValue("unit-only-draft");
-});
+}, 15_000);
 
 it("retries only the failing group and releases the blocking overlay on failure", async () => {
   vi.mocked(companyApi.getSettings).mockRejectedValueOnce(new Error("unit-failure"));

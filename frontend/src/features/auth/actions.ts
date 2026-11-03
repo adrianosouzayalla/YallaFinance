@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { type LoginActionState } from "./authSession";
 import { authServerApi } from "./api/auth.server";
+import { ApiError } from "@/services/api/api-error";
 import { createSession, deleteSession, readSession } from "./server/session";
 
 export async function loginAction(
@@ -44,7 +45,9 @@ export async function loginAction(
       await authServerApi.logout(result.token);
       throw error;
     }
-  } catch {
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 429)
+      return { fieldErrors: {}, formError: "Muitas tentativas de login. Aguarde alguns minutos e tente novamente.", email };
     return { fieldErrors: {}, formError: "Não foi possível iniciar a sessão. Confira o acesso e tente novamente.", email };
   }
   redirect("/home?toast=login-success");

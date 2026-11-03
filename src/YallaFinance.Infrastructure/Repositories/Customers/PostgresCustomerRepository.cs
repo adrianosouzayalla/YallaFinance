@@ -13,9 +13,6 @@ public sealed partial class PostgresCustomerRepository : ICustomerRepository
         this.db = db;
     }
 
-    public Task<Customer?> FindAsync(Guid id, CancellationToken cancellationToken) =>
-        db.Customers.SingleOrDefaultAsync(value => value.Id == id, cancellationToken);
-
     public void Add(Customer customer) => db.Customers.Add(customer);
 
     public async Task<ChargeCustomerRecord?> FindLocalForChargeAsync(
