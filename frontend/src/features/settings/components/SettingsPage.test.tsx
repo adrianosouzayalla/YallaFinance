@@ -41,6 +41,7 @@ beforeEach(() => {
     const values = {
       payments: { maximumLinkDays: "45", publicOrigin: null },
       session: { sessionLifetimeMinutes: null },
+      security: { loginMaxFailedAttempts: "10", loginAttemptWindowMinutes: "15" },
       "user-registration": { initialPassword: "persisted-initial-password" },
       "financial-settlement": { receiptTimeZoneId: null },
       "job-retry": { limits: { FINANCIAL_CHARGE_CREATE_V1: 0, FINANCIAL_CHARGE_SETTLE_V1: 0, FINANCIAL_DEBIT_INBOUND_V1: 0 } },
@@ -115,9 +116,9 @@ it("loads every company setting group on screen entry and preserves persisted va
   expect(screen.getByLabelText(/Origem pública/)).toHaveValue("");
   expect(screen.getByLabelText("Senha inicial de usuários")).toHaveValue("persisted-initial-password");
   expect(screen.queryByLabelText("Identificador da empresa")).not.toBeInTheDocument();
-  await waitFor(() => expect(companyApi.getSettings).toHaveBeenCalledTimes(4));
+  await waitFor(() => expect(companyApi.getSettings).toHaveBeenCalledTimes(5));
   expect(new Set(vi.mocked(companyApi.getSettings).mock.calls.map(([group]) => group))).toEqual(new Set([
-    "payments", "session", "user-registration", "financial-settlement",
+    "payments", "session", "security", "user-registration", "financial-settlement",
   ]));
   expect(screen.queryByRole("button", { name: /Consultar/ })).not.toBeInTheDocument();
   expect(screen.getAllByRole("button", { name: "Salvar" }).every((button) => button.hasAttribute("disabled"))).toBe(true);
@@ -128,7 +129,7 @@ it("shows the persisted initial password and missing fields remain empty", async
   const password = await screen.findByLabelText("Senha inicial de usuários");
   await waitForIdle();
   expect(password).toHaveValue("persisted-initial-password");
-  await waitFor(() => expect(companyApi.getSettings).toHaveBeenCalledTimes(4));
+  await waitFor(() => expect(companyApi.getSettings).toHaveBeenCalledTimes(5));
   expect(screen.getByLabelText(/Fuso horário padrão/)).toHaveValue("");
 });
 
@@ -214,7 +215,7 @@ it("retries only the failing group and releases the blocking overlay on failure"
   await waitFor(() => expect(screen.queryByRole("status", { name: "Consultando configurações..." })).not.toBeInTheDocument());
   fireEvent.click(retry);
   await screen.findByDisplayValue(45);
-  expect(companyApi.getSettings).toHaveBeenCalledTimes(5);
+  expect(companyApi.getSettings).toHaveBeenCalledTimes(6);
   expect(companyApi.listConnections).not.toHaveBeenCalled();
 });
 

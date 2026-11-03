@@ -11,6 +11,7 @@ using YallaFinance.WebApi.Extensions;
 
 using YallaFinance.WebApi.Authentication;
 using YallaFinance.WebApi.Authorization;
+using YallaFinance.WebApi.Security;
 using YallaFinance.Application.Repositories.Sessions.Contracts;
 
 namespace YallaFinance.WebApi.Controllers;
@@ -23,6 +24,7 @@ public sealed class AuthController(IMediator mediator) : ControllerBase
 {
     [HttpPost("login")]
     [AllowAnonymous]
+    [TypeFilter(typeof(AuthenticationAttemptFilter), Arguments = new object[] { AuthenticationAttemptKind.Login })]
     public async Task<IActionResult> Login(LoginCommand command, CancellationToken cancellationToken) =>
         (await mediator.Send(command, cancellationToken)).ToActionResult(this);
 

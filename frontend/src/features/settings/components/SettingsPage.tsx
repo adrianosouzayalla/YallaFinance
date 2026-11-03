@@ -46,6 +46,10 @@ function CompanyGroup({ section, reportBusy, reportDirty }: { section: SettingsS
     values["EMP-01"] = payments.maximumLinkDays; values["EMP-02"] = payments.publicOrigin;
   }
   if (group === "session" && data) values["EMP-03"] = (data as CompanySettingsByGroup["session"]).sessionLifetimeMinutes;
+  if (group === "security" && data) {
+    const security = data as CompanySettingsByGroup["security"];
+    values["EMP-06"] = security.loginMaxFailedAttempts; values["EMP-07"] = security.loginAttemptWindowMinutes;
+  }
   if (group === "regional-settings" && data)
     values["EMP-05"] = (data as CompanySettingsByGroup["financial-settlement"]).receiptTimeZoneId;
   if (group === "user-registration" && data)
@@ -61,6 +65,10 @@ function CompanyGroup({ section, reportBusy, reportDirty }: { section: SettingsS
       publicOrigin: draftValues["EMP-02"] ?? values["EMP-02"] ?? "",
     } as CompanySettingsByGroup["payments"];
     else if (group === "session") payload = { sessionLifetimeMinutes: draftValues["EMP-03"] ?? values["EMP-03"] ?? "" } as CompanySettingsByGroup["session"];
+    else if (group === "security") payload = {
+      loginMaxFailedAttempts: draftValues["EMP-06"] ?? values["EMP-06"] ?? "",
+      loginAttemptWindowMinutes: draftValues["EMP-07"] ?? values["EMP-07"] ?? "",
+    } as CompanySettingsByGroup["security"];
     else if (group === "user-registration") payload = { initialPassword: draftValues["EMP-04"] ?? values["EMP-04"] ?? "" } as CompanySettingsByGroup["user-registration"];
     else payload = { receiptTimeZoneId: draftValues["EMP-05"] ?? values["EMP-05"] ?? "" } as CompanySettingsByGroup["financial-settlement"];
     try {
@@ -83,6 +91,7 @@ function CompanyGroup({ section, reportBusy, reportDirty }: { section: SettingsS
     <Button size="small" variant="contained" disabled={!dirty || mutation.isPending || !data || hasInvalidValues} onClick={() => void save()}>Salvar</Button>
   </Stack>}>
     <Box id={`company-group-${group}`}>
+      {section.description ? <Typography variant="body2" color="text.secondary" sx={{ px: 2.5, pt: 2 }}>{section.description}</Typography> : null}
       <Box sx={{ ...fieldGrid, p: 2.5 }}>{section.fields.map((field) =>
         <SettingsInput key={field.id} field={field} persisted={values[field.id]} value={draftValues[field.id] ?? values[field.id] ?? ""}
           validateRequired

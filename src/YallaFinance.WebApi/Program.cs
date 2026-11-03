@@ -35,6 +35,8 @@ try
     builder.Services.AddApplication();
     builder.Services.AddInfrastructure(builder.Configuration);
     builder.Services.AddInfrastructureAuthentication(builder.Configuration);
+    builder.Services.AddSingleton<YallaFinance.WebApi.Security.AttemptRateObserver>();
+    builder.Services.AddScoped<YallaFinance.WebApi.Security.ILoginAttemptPolicyReader, YallaFinance.WebApi.Security.MediatorLoginAttemptPolicyReader>();
     builder.Services.AddSingleton<IAuthorizationPolicyProvider, FunctionalityPolicyProvider>();
     builder.Services.AddScoped<IAuthorizationHandler, FunctionalityAuthorizationHandler>();
     builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, FunctionalityAuthorizationMiddlewareResultHandler>();

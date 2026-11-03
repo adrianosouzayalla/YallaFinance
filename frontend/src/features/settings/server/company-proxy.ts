@@ -3,7 +3,7 @@ import { authenticatedResponse } from "@/features/auth/server/session-boundary";
 import { backendResponse } from "@/services/api/api-client.server";
 
 const guid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const groups = new Set(["payments", "session", "user-registration", "financial-settlement", "job-retry"]);
+const groups = new Set(["payments", "session", "security", "user-registration", "financial-settlement", "job-retry"]);
 const mappingTypes = new Set(["Category", "ReceiptAccount"]);
 const supportedPaymentInstruments = new Set(["Pix", "CreditCard", "Boleto"]);
 const mappingSorts = ["internalName", "internalValue", "externalValue", "createdAt", "updatedAt"];
@@ -70,6 +70,9 @@ function validBody(kind: string, value: unknown, mappingType?: string): boolean 
   if (kind === "payments")
     return !!value && typeof value === "object" && hasExactKeys(value as Record<string, unknown>, ["maximumLinkDays", "publicOrigin"])
       && ["maximumLinkDays", "publicOrigin"].every((key) => (value as Record<string, unknown>)[key] === null || typeof (value as Record<string, unknown>)[key] === "string");
+  if (kind === "security")
+    return !!value && typeof value === "object" && hasExactKeys(value as Record<string, unknown>, ["loginMaxFailedAttempts", "loginAttemptWindowMinutes"])
+      && ["loginMaxFailedAttempts", "loginAttemptWindowMinutes"].every((key) => (value as Record<string, unknown>)[key] === null || typeof (value as Record<string, unknown>)[key] === "string");
   if (kind === "session" || kind === "user-registration" || kind === "financial-settlement") {
     const key = kind === "session" ? "sessionLifetimeMinutes" : kind === "user-registration" ? "initialPassword" : "receiptTimeZoneId";
     return !!value && typeof value === "object" && hasExactKeys(value as Record<string, unknown>, [key])

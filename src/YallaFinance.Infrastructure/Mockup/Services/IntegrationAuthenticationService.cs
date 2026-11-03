@@ -4,13 +4,16 @@ using Microsoft.Extensions.Options;
 
 using YallaFinance.Application.Services.Authentication.Contracts;
 using YallaFinance.Application.Repositories.Authentication;
+using YallaFinance.Application.Repositories.Users;
 using YallaFinance.Application.Services.Authentication;
 
 namespace YallaFinance.Infrastructure.Mockup.Services;
 
 public sealed class IntegrationAuthenticationService(
     IOptions<JwtAuthenticationOptions> options,
-    ITenantAccessRepository access)
+    ITenantAccessRepository access,
+    IUserIdentityRepository identities,
+    IUserPasswordHasher passwords)
     : IIntegrationAuthenticationService
 {
     public async Task<AuthenticationResult> AuthenticateAsync(
@@ -18,9 +21,17 @@ public sealed class IntegrationAuthenticationService(
         CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        // Password verification remains the existing development policy in this phase.
-        var valid = !string.IsNullOrWhiteSpace(request.Email) && !string.IsNullOrWhiteSpace(request.Password);
+        var valid = !string.IsNullOrWhiteSpace(request.Email) && !string.IsNullOrWhiteSpace(request.Password) && request.Password.Length <= 128;
         if (!valid)
+            return new AuthenticationResult(false, null, null, "INVALID_CREDENTIALS");
+
+        // The stored hash must match before any company is returned, as in the interactive login.
+        var credentialsVerified = await identities.ExecuteLockedAsync(async token =>
+        {
+            var user = await identities.ResolveAsync(request.Email, token);
+            return user is not null && passwords.Verify(user.PasswordHash, request.Password);
+        }, cancellationToken);
+        if (!credentialsVerified)
             return new AuthenticationResult(false, null, null, "INVALID_CREDENTIALS");
 
         var email = TenantAccessEmail.Normalize(request.Email);

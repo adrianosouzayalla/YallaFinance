@@ -24,6 +24,15 @@ public sealed class CompanyController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> GetSessionSettings(CancellationToken cancellationToken)
         => (await mediator.Send(new GetCompanySessionSettingsQuery(), cancellationToken)).ToActionResult(this);
 
+    [HttpGet("settings/security")]
+    [ProducesResponseType<CompanySecuritySettings>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetSecuritySettings(CancellationToken cancellationToken)
+        => (await mediator.Send(new GetCompanySecuritySettingsQuery(), cancellationToken)).ToActionResult(this);
+
+    [HttpPut("settings/security")]
+    public async Task<IActionResult> SaveSecuritySettings([FromBody] SaveCompanySecuritySettingsCommand command, CancellationToken cancellationToken)
+        => (await mediator.Send(command, cancellationToken)).ToActionResult(this);
+
     [HttpGet("settings/user-registration")]
     [ProducesResponseType<CompanyUserRegistrationSettings>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetUserRegistrationSettings(CancellationToken cancellationToken)

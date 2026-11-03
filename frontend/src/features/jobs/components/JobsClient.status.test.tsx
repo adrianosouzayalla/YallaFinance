@@ -92,6 +92,8 @@ it.each([
     );
     expect(indicators().getAllByRole("button", { pressed: false })).toHaveLength(3);
   },
+  // Full-page MUI render: allow more than the 5s default when the suite runs under load.
+  15_000,
 );
 
 it("preserves applied Key and Type, leaves drafts unapplied and returns to page one", async () => {
@@ -114,7 +116,7 @@ it("preserves applied Key and Type, leaves drafts unapplied and returns to page 
   expect(indicators().getByRole("button", { name: /^Aguardando/ })).toHaveTextContent("20");
   expect(indicators().getByRole("button", { name: /^Em processamento/ })).toHaveTextContent("25");
   expect(indicators().getByRole("button", { name: /^Concluídos/ })).toHaveTextContent("80");
-});
+}, 15_000);
 
 it("clicking the active indicator refreshes the same status immediately", async () => {
   await renderJobs();

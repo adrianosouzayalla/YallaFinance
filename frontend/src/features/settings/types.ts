@@ -1,8 +1,9 @@
 export type CompanySettingsGroup =
-  "payments" | "session" | "user-registration" | "financial-settlement" | "job-retry";
+  "payments" | "session" | "security" | "user-registration" | "financial-settlement" | "job-retry";
 export interface CompanySettingsByGroup {
   payments: { maximumLinkDays: string | null; publicOrigin: string | null };
   session: { sessionLifetimeMinutes: string | null };
+  security: { loginMaxFailedAttempts: string | null; loginAttemptWindowMinutes: string | null };
   "user-registration": { initialPassword: string | null };
   "financial-settlement": { receiptTimeZoneId: string | null };
   "job-retry": { limits: Record<string, number> };

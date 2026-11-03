@@ -13,6 +13,7 @@ public sealed class IntegrationAuthController(ISender sender) : ControllerBase
 {
     [HttpPost("token")]
     [AllowAnonymous]
+    [TypeFilter(typeof(YallaFinance.WebApi.Security.AuthenticationAttemptFilter), Arguments = new object[] { YallaFinance.WebApi.Security.AuthenticationAttemptKind.IntegrationToken })]
     [ProducesResponseType(typeof(LoginResult), StatusCodes.Status200OK)]
     public async Task<IActionResult> Token(
         IntegrationTokenCommand command,
