@@ -1,6 +1,7 @@
 
 using YallaFinance.Application.Common.Context;
 using YallaFinance.Application.Features.Jobs.Processing;
+using YallaFinance.Application.Features.Jobs.Retry;
 
 namespace YallaFinance.Worker.Processing.Jobs;
 
@@ -12,6 +13,7 @@ public static class JobWorkerServiceCollectionExtensions
     {
         services.AddJobEngine();
         services.AddScoped<JobProcessor>();
+        services.AddScoped<JobRetrySweeper>();
         services.AddScoped<JobTenantContext>();
         services.AddScoped<IJobTenantContext>(serviceProvider =>
             serviceProvider.GetRequiredService<JobTenantContext>());

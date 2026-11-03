@@ -238,7 +238,6 @@ export function PublicPaymentCheckoutClient({ token, checkout: incomingCheckout,
   const activeAttemptMethodCode = attempt?.paymentMethodCode || attemptMethodCode;
   const selectedMethodDiffersFromActiveAttempt = attemptHasOpenRisk && Boolean(activeAttemptMethodCode)
     && activeAttemptMethodCode.toLowerCase() !== selectedCode.toLowerCase();
-  const changingActiveMethod = step === "method" && selectedMethodDiffersFromActiveAttempt;
   const canStart = canAccessAttemptAction && hasMethods && Boolean(selectedMethod)
     && (selectedPix || selectedCard || selectedBoleto)
     && !isSubmitting;

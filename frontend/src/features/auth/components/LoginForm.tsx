@@ -11,8 +11,6 @@ import { financeTokens } from "@/theme/designTokens";
 import { LoadingState } from "@/components/ui/LoadingState";
 import {
   INITIAL_LOGIN_STATE,
-  DEMO_LOGIN,
-  DEMO_LOGIN_PASSWORD,
   type LoginActionState,
   type LoginInput,
 } from "@/features/auth/authSession";
@@ -30,11 +28,11 @@ export function LoginForm({ action = loginAction }: LoginFormProps) {
   const [state, formAction, pending] = useActionState(action, INITIAL_LOGIN_STATE);
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: DEMO_LOGIN, password: DEMO_LOGIN_PASSWORD, tenantId: "" },
+    defaultValues: { email: "", password: "", tenantId: "" },
   });
   const { reset, getValues } = form;
   useEffect(() => {
-    reset({ email: state.email ?? DEMO_LOGIN, password: getValues("password"), tenantId: "" });
+    reset({ email: state.email ?? "", password: getValues("password"), tenantId: "" });
   }, [state, reset, getValues]);
   const searchParams = useSearchParams();
   const sessionExpired = searchParams.get("error") === "session-expired";

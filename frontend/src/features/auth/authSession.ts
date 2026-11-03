@@ -27,5 +27,3 @@ export interface LoginActionState {
 }
 export const INITIAL_LOGIN_STATE: LoginActionState = { fieldErrors: {}, formError: "" };
 export const SESSION_COOKIE = "yalla-finance-session";
-export const DEMO_LOGIN = "admin@yalla.com.br";
-export const DEMO_LOGIN_PASSWORD = "Yalla@2026";

@@ -78,7 +78,7 @@ export function CreditCardPaymentForm({ missingCustomerFields, disabled, onSubmi
             <NumberFormatBase customInput={TextField} label="Número do cartão" autoComplete="cc-number"
               disabled={disabled} name={field.name} value={field.value} valueIsNumericString
               type="text" inputMode="numeric" onFocus={() => setFocusedCardField("number")}
-              onBlur={(event) => { field.onBlur(); setFocusedCardField(null); }}
+              onBlur={() => { field.onBlur(); setFocusedCardField(null); }}
               slotProps={{ htmlInput: { inputMode: "numeric", maxLength: 23, ref: field.ref,
                 onInput: (event: FormEvent<HTMLInputElement>) => {
                   const input = event.currentTarget;

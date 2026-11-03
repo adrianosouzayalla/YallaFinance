@@ -24,8 +24,8 @@ it("preserves the submitted payload and existing defaults when selecting a compa
     }),
   );
   render(<LoginForm action={action} />);
-  expect(screen.getByLabelText("Login")).toHaveValue("admin@yalla.com.br");
-  expect(screen.getByLabelText("Senha")).toHaveValue("Yalla@2026");
+  expect(screen.getByLabelText("Login")).toHaveValue("");
+  expect(screen.getByLabelText("Senha")).toHaveValue("");
   fireEvent.change(screen.getByLabelText("Login"), { target: { value: "usuario" } });
   fireEvent.change(screen.getByLabelText("Senha"), { target: { value: "senha-teste" } });
   fireEvent.click(screen.getByRole("button", { name: "Entrar" }));
