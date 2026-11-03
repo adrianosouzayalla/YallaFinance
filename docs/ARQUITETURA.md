@@ -108,7 +108,7 @@ Se a consulta falha, a rotina registra o aviso e tenta de novo no próximo ciclo
 | Tema | Situação |
 |---|---|
 | Restauração do backup | Validar, após a restauração, que a API e o Worker sobem e que o login funciona. |
-| Conta administrativa da carga base | `admin@yalla.com.br` é criada pela carga base. Mantida para testes; trocar a senha ou desativar antes de produção. |
+| Conta administrativa da carga base | `admin@yalla.com.br` é criada pela carga base. Senha já trocada no backup. Conta mantida para testes; decidir se será desativada antes de produção. |
 | Chave do Bearer de integração | Gerada a cada start da API. Reiniciar invalida os tokens de integração. A chave do `appsettings` não é usada. Definir mecanismo de assinatura e rotação para produção. |
 | Encaminhamento de proxy | A API não configura `UseForwardedHeaders`. Validar o caminho HTTPS antes de publicar atrás de proxy. |
 | CORS | Não configurar em produção: o navegador não chama a API. Lista fixa vale só para desenvolvimento. |

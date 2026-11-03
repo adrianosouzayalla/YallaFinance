@@ -20,7 +20,7 @@ A infra recebe:
 
 - **Origem pública atrás do proxy:** mutations do frontend podem ser recusadas em HTTPS terminado no proxy. Ver [05 - PROXY E HTTPS.md](05%20-%20PROXY%20E%20HTTPS.md).
 - **Encaminhamento de cabeçalhos:** a API não lê `X-Forwarded-Proto`. Ver [05 - PROXY E HTTPS.md](05%20-%20PROXY%20E%20HTTPS.md).
-- **Conta admin do backup** (`admin@yalla.com.br`): trocar a senha antes de expor o ambiente. Ver [01 - BANCO.md](01%20-%20BANCO.md).
+- **Conta admin do backup** (`admin@yalla.com.br`): senha trocada no backup (concluído). Ver [01 - BANCO.md](01%20-%20BANCO.md).
 - **Diretório de evidências do Nibo:** não ativar em produção sem decisão. Ver [03 - WORKER.md](03%20-%20WORKER.md).
 
 ## Atenção, sem bloqueio

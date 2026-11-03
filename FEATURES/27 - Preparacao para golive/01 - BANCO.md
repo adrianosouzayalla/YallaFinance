@@ -21,7 +21,7 @@
 
 ## Após a restauração
 
-- Trocar a senha de `admin@yalla.com.br` antes de expor o ambiente. Esse usuário vem do backup.
+- Senha de `admin@yalla.com.br` trocada no backup (concluído). Esse usuário vem do backup.
 - Conferir que o registro `Authentication.JwtSigningKey.v1` não existe. Foi removido.
 
 ## Conexão
