@@ -8,7 +8,8 @@ using YallaFinance.Application.Repositories.Users.Contracts;
 using YallaFinance.Application.Entities.Tenants;
 namespace YallaFinance.Infrastructure.Repositories.Access;
 
-public sealed class PostgresUserIdentityRepository(YallaFinanceDbContext db, AccountMutationLock mutations) : IUserIdentityRepository
+public sealed class PostgresUserIdentityRepository(YallaFinanceDbContext db, AccountMutationLock mutations,
+    YallaFinance.Application.Services.Authentication.IUserPasswordHasher passwords) : IUserIdentityRepository
 {
     public Task<Guid?> FindOperationalUserIdAsync(string login, CancellationToken ct) =>
         db.Users.AsNoTracking().Where(user => user.Login == login && user.IsOperational
@@ -35,9 +36,26 @@ public sealed class PostgresUserIdentityRepository(YallaFinanceDbContext db, Acc
         {
             Id = u.Id,
             Name = u.Name,
-            PasswordHash = u.PasswordHash
+            PasswordHash = u.PasswordHash,
+            MustChangePassword = u.MustChangePassword,
         }).SingleOrDefaultAsync(ct);
     }
+
+    public async Task ReplacePasswordAsync(Guid userId, string newPassword, CancellationToken ct)
+    {
+        UserManagementValidation.Password(newPassword);
+        var now = DateTime.UtcNow;
+        var user = await db.Users.SingleAsync(u => u.Id == userId, ct);
+        user.PasswordHash = passwords.Hash(newPassword);
+        user.MustChangePassword = false;
+        user.UpdatedAt = now;
+        user.UpdatedBy = userId;
+        await db.UserSessions.Where(session => session.UserId == userId && session.RevokedAt == null)
+            .ExecuteUpdateAsync(sessions => sessions.SetProperty(session => session.RevokedAt, now)
+                .SetProperty(session => session.UpdatedAt, now).SetProperty(session => session.UpdatedBy, userId), ct);
+        await db.SaveChangesAsync(ct);
+    }
+
     public async Task<IReadOnlyList<TenantOption>> TenantsAsync(Guid userId, CancellationToken ct)
         => await db.TenantAccesses.AsNoTracking().Where(a => a.UserId == userId && a.Active && a.User.Active && !a.User.IsOperational && a.Tenant.Active)
             .OrderBy(a => a.Tenant.Name).ThenBy(a => a.TenantId)

@@ -48,6 +48,8 @@ public partial class YallaFinanceDbContext : DbContext
 
     public virtual DbSet<ManualDebtRequest> ManualDebtRequests { get; set; }
 
+    public virtual DbSet<PasswordChangeTicket> PasswordChangeTickets { get; set; }
+
     public virtual DbSet<PaymentAttempt> PaymentAttempts { get; set; }
 
     public virtual DbSet<PaymentAttemptBoleto> PaymentAttemptBoletos { get; set; }
@@ -1076,6 +1078,32 @@ public partial class YallaFinanceDbContext : DbContext
                 .HasConstraintName("fk_manual_debt_request_debt");
         });
 
+        modelBuilder.Entity<PasswordChangeTicket>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_password_change_ticket");
+
+            entity.ToTable("password_change_ticket", "core");
+
+            entity.HasIndex(e => e.ExpiresAt, "ix_password_change_ticket_expires_at");
+
+            entity.HasIndex(e => e.TicketHash, "uq_password_change_ticket_hash").IsUnique();
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+            entity.Property(e => e.ExpiresAt).HasColumnName("expires_at");
+            entity.Property(e => e.Login).HasColumnName("login");
+            entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+            entity.Property(e => e.TicketHash).HasColumnName("ticket_hash");
+            entity.Property(e => e.UsedAt).HasColumnName("used_at");
+
+            entity.HasOne(d => d.Tenant).WithMany(p => p.PasswordChangeTickets)
+                .HasForeignKey(d => d.TenantId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_password_change_ticket_tenant");
+        });
+
         modelBuilder.Entity<PaymentAttempt>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("pk_payment_attempt");
@@ -2067,6 +2095,7 @@ public partial class YallaFinanceDbContext : DbContext
             entity.Property(e => e.Login)
                 .HasComment("Global login normalized with lower(btrim(login)); textual codes retain leading zeros.")
                 .HasColumnName("login");
+            entity.Property(e => e.MustChangePassword).HasColumnName("must_change_password");
             entity.Property(e => e.Name).HasColumnName("name");
             entity.Property(e => e.PasswordHash)
                 .HasComment("Restricted credential hash; NULL prevents local password authentication. Never store a default password.")

@@ -12,4 +12,6 @@ public sealed class UserCredentialIdentity
     {
         get; init;
     }
+    /// <summary>True while the user must replace the password before using the system (feature 28, phase 3).</summary>
+    public bool MustChangePassword { get; init; }
 }

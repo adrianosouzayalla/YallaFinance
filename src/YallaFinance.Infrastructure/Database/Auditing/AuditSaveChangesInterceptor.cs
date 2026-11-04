@@ -22,6 +22,13 @@ public sealed class AuditSaveChangesInterceptor(CurrentExecutionActorContext act
         return ValueTask.FromResult(result);
     }
 
+    /// <summary>
+    /// Tables approved without audit: core.database_version, and core.password_change_ticket (feature 28, phase 4, decision D-2:
+    /// technical, short-lived table with no business data).
+    /// </summary>
+    private static bool IsUnauditedTable(Microsoft.EntityFrameworkCore.Metadata.IEntityType metadata) =>
+        metadata.GetSchema() == "core" && metadata.GetTableName() is "database_version" or "password_change_ticket";
+
     internal void Stamp(DbContext context)
     {
         context.ChangeTracker.DetectChanges();
@@ -29,7 +36,7 @@ public sealed class AuditSaveChangesInterceptor(CurrentExecutionActorContext act
         foreach (var entry in context.ChangeTracker.Entries().ToArray())
         {
             if (entry.State is not (EntityState.Added or EntityState.Modified or EntityState.Deleted)
-                || (entry.Metadata.GetSchema() == "core" && entry.Metadata.GetTableName() == "database_version"))
+                || IsUnauditedTable(entry.Metadata))
                 continue;
             foreach (var property in AuditProperties)
                 if (entry.Metadata.FindProperty(property) is null)

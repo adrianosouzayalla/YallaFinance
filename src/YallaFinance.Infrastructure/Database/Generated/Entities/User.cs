@@ -46,6 +46,8 @@ public partial class User
     /// </summary>
     public Guid? UpdatedBy { get; set; }
 
+    public bool MustChangePassword { get; set; }
+
     public virtual ICollection<AccessProfile> AccessProfileCreatedByNavigations { get; set; } = new List<AccessProfile>();
 
     public virtual ICollection<AccessProfileFunctionality> AccessProfileFunctionalityCreatedByNavigations { get; set; } = new List<AccessProfileFunctionality>();

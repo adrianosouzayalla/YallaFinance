@@ -13,8 +13,20 @@ export async function loginAction(
   const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
   const tenantId = String(formData.get("tenantId") ?? "").trim() || undefined;
+  // A ticket is sent only when the form is completing a forced password change (feature 28, phase 3).
+  const ticket = String(formData.get("ticket") ?? "");
+  if (ticket) return completeRequiredPasswordChange(formData, email, ticket);
   try {
     const result = await authServerApi.login({ email, password, tenantId });
+    // Checked before tenant selection: the response also carries the ticket and may list companies.
+    if (result.errorCode === "PASSWORD_CHANGE_REQUIRED")
+      return {
+        fieldErrors: {},
+        formError: "Defina uma nova senha para continuar.",
+        email,
+        passwordChangeRequired: true,
+        passwordChangeTicket: result.token ?? undefined,
+      };
     if (!result.token && result.tenants?.length)
       return {
         fieldErrors: {},
@@ -51,6 +63,29 @@ export async function loginAction(
     return { fieldErrors: {}, formError: "Não foi possível iniciar a sessão. Confira o acesso e tente novamente.", email };
   }
   redirect("/home?toast=login-success");
+}
+
+async function completeRequiredPasswordChange(formData: FormData, email: string, ticket: string): Promise<LoginActionState> {
+  const currentPassword = String(formData.get("password") ?? "");
+  const newPassword = String(formData.get("newPassword") ?? "");
+  const confirmation = String(formData.get("confirmPassword") ?? "");
+  const stillPending = { fieldErrors: {}, email, passwordChangeRequired: true, passwordChangeTicket: ticket };
+  if (newPassword !== confirmation)
+    return { ...stillPending, formError: "A confirmação não confere com a nova senha." };
+  try {
+    const response = await authServerApi.changeRequiredPassword({ email, ticket, currentPassword, newPassword, confirmation });
+    if (response.ok)
+      return { fieldErrors: {}, email, formError: "Senha alterada. Entre com a nova senha.", passwordChanged: true };
+    if (response.status === 401)
+      return { ...stillPending, formError: "Senha atual incorreta ou troca expirada. Confira a senha ou entre novamente." };
+    if (response.status === 409)
+      return { fieldErrors: {}, email, formError: "Esta conta não precisa trocar a senha. Entre novamente." };
+    if (response.status === 400)
+      return { ...stillPending, formError: "Confira a nova senha: de 12 a 128 caracteres." };
+    return { ...stillPending, formError: "Não foi possível trocar a senha. Tente novamente." };
+  } catch {
+    return { ...stillPending, formError: "Não foi possível trocar a senha. Tente novamente." };
+  }
 }
 
 export async function logoutAction(): Promise<{ error: string }> {

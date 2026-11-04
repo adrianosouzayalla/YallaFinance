@@ -26,13 +26,20 @@ interface LoginFormProps {
 
 export function LoginForm({ action = loginAction }: LoginFormProps) {
   const [state, formAction, pending] = useActionState(action, INITIAL_LOGIN_STATE);
-  const form = useForm<LoginInput>({
+  const form = useForm<LoginInput & { newPassword?: string; confirmPassword?: string }>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: "", password: "", tenantId: "" },
+    defaultValues: { email: "", password: "", tenantId: "", newPassword: "", confirmPassword: "" },
   });
   const { reset, getValues } = form;
   useEffect(() => {
-    reset({ email: state.email ?? "", password: getValues("password"), tenantId: "" });
+    reset({
+      email: state.email ?? "",
+      // After a completed change the old password is cleared; the user signs in again with the new one.
+      password: state.passwordChanged ? "" : getValues("password"),
+      tenantId: "",
+      newPassword: state.passwordChangeRequired ? getValues("newPassword") : "",
+      confirmPassword: state.passwordChangeRequired ? getValues("confirmPassword") : "",
+    });
   }, [state, reset, getValues]);
   const searchParams = useSearchParams();
   const sessionExpired = searchParams.get("error") === "session-expired";
@@ -66,6 +73,7 @@ export function LoginForm({ action = loginAction }: LoginFormProps) {
             const data = new FormData();
             for (const [key, value] of Object.entries(values))
               if (value !== undefined) data.set(key, value);
+            if (state.passwordChangeRequired && state.passwordChangeTicket) data.set("ticket", state.passwordChangeTicket);
             startTransition(() => formAction(data));
           })(event);
         }}
@@ -97,12 +105,47 @@ export function LoginForm({ action = loginAction }: LoginFormProps) {
               error={Boolean(state.fieldErrors.password)}
               fullWidth
               helperText={state.fieldErrors.password}
-              label="Senha"
+              label={state.passwordChangeRequired ? "Senha atual" : "Senha"}
               sx={{ mt: financeTokens.auth.formGap / 2 }}
               type="password"
             />
           )}
         />
+        {state.passwordChangeRequired ? (
+          <>
+            <Controller
+              name="newPassword"
+              control={form.control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  autoComplete="new-password"
+                  fullWidth
+                  helperText="De 12 a 128 caracteres."
+                  label="Nova senha"
+                  required
+                  sx={{ mt: financeTokens.auth.formGap / 2 }}
+                  type="password"
+                />
+              )}
+            />
+            <Controller
+              name="confirmPassword"
+              control={form.control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  autoComplete="new-password"
+                  fullWidth
+                  label="Confirmar nova senha"
+                  required
+                  sx={{ mt: financeTokens.auth.formGap / 2 }}
+                  type="password"
+                />
+              )}
+            />
+          </>
+        ) : null}
         {state.tenantOptions && state.tenantOptions.length > 1 ? (
           <Controller
             name="tenantId"

@@ -26,13 +26,16 @@ public sealed class IntegrationAuthenticationService(
             return new AuthenticationResult(false, null, null, "INVALID_CREDENTIALS");
 
         // The stored hash must match before any company is returned, as in the interactive login.
-        var credentialsVerified = await identities.ExecuteLockedAsync(async token =>
+        var verifiedUser = await identities.ExecuteLockedAsync(async token =>
         {
             var user = await identities.ResolveAsync(request.Email, token);
-            return user is not null && passwords.Verify(user.PasswordHash, request.Password);
+            return user is not null && passwords.Verify(user.PasswordHash, request.Password) ? user : null;
         }, cancellationToken);
-        if (!credentialsVerified)
+        if (verifiedUser is null)
             return new AuthenticationResult(false, null, null, "INVALID_CREDENTIALS");
+        // A forced password change blocks the integration token too (feature 28, phase 3).
+        if (verifiedUser.MustChangePassword)
+            return new AuthenticationResult(false, null, verifiedUser.Name, "PASSWORD_CHANGE_REQUIRED");
 
         var email = TenantAccessEmail.Normalize(request.Email);
         var tenants = await access.GetAuthorizedTenantsAsync(email, cancellationToken);

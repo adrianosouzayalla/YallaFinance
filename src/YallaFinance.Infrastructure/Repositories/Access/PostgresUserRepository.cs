@@ -117,6 +117,8 @@ public sealed class PostgresUserRepository(YallaFinanceDbContext db, CurrentSess
                 Login = login,
                 Name = name,
                 PasswordHash = passwordHash,
+                // The company's initial password must be replaced at the first login (feature 28, phase 3).
+                MustChangePassword = true,
                 Active = input.Active,
             };
             db.Users.Add(newUser);
@@ -174,6 +176,7 @@ public sealed class PostgresUserRepository(YallaFinanceDbContext db, CurrentSess
         if (initialPassword is null)
             throw new UserManagementException("INITIAL_PASSWORD_REQUIRED", "Configure a senha inicial da empresa antes de redefinir senhas.", 409);
         tenantAccess.User.PasswordHash = passwords.Hash(initialPassword);
+        tenantAccess.User.MustChangePassword = true;
         await RevokeActiveSessionsAsync(id, token);
         return true;
     }, ct);
@@ -183,6 +186,7 @@ public sealed class PostgresUserRepository(YallaFinanceDbContext db, CurrentSess
         if (!passwords.Verify(tenantAccess.User.PasswordHash, input.CurrentPassword))
             throw new UserManagementException("INVALID_PASSWORD", "Senha atual incorreta.");
         tenantAccess.User.PasswordHash = passwords.Hash(input.NewPassword);
+        tenantAccess.User.MustChangePassword = false;
         await RevokeActiveSessionsAsync(Context.UserId, token);
         return true;
     }, ct);

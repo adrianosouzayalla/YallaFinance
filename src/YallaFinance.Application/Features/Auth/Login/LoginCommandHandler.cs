@@ -20,7 +20,7 @@ public sealed class LoginCommandHandler(IAuthenticationService authentication)
                 request.Password,
                 request.TenantId),
             cancellationToken);
-        if (authenticationResult.ErrorCode == "TENANT_SELECTION_REQUIRED")
+        if (authenticationResult.ErrorCode is "TENANT_SELECTION_REQUIRED" or "PASSWORD_CHANGE_REQUIRED")
             return NotificationResult<LoginResult>.Success(LoginResult.From(authenticationResult));
 
         return authenticationResult.Success

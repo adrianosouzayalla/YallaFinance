@@ -60,6 +60,8 @@ public partial class Tenant
 
     public virtual ICollection<Job> Jobs { get; set; } = new List<Job>();
 
+    public virtual ICollection<PasswordChangeTicket> PasswordChangeTickets { get; set; } = new List<PasswordChangeTicket>();
+
     public virtual ICollection<PaymentAttempt> PaymentAttempts { get; set; } = new List<PaymentAttempt>();
 
     public virtual ICollection<PaymentCommandReceipt> PaymentCommandReceipts { get; set; } = new List<PaymentCommandReceipt>();

@@ -7,7 +7,7 @@ using YallaFinance.Application.Services.Authentication.Contracts;
 namespace YallaFinance.Infrastructure.Mockup.Services;
 
 public sealed class CatalogAuthenticationService(IUserIdentityRepository identities,
-    IUserPasswordHasher passwords, IUserSessionService sessions) : IAuthenticationService
+    IUserPasswordHasher passwords, IUserSessionService sessions, IPasswordChangeTicketStore passwordChangeTickets) : IAuthenticationService
 {
     public Task<AuthenticationResult> AuthenticateAsync(LoginRequest request, CancellationToken ct)
     {
@@ -25,10 +25,18 @@ public sealed class CatalogAuthenticationService(IUserIdentityRepository identit
                 return new(false, null, user.Name, "TENANT_SELECTION_REQUIRED", null, null, tenants);
             var selectedTenant = string.IsNullOrWhiteSpace(request.TenantId) ? tenants.FirstOrDefault() :
                 tenants.FirstOrDefault(t => string.Equals(t.Id, request.TenantId, StringComparison.OrdinalIgnoreCase));
-            return selectedTenant is null ? new(false, null, null, "TENANT_NOT_ALLOWED") :
-                await sessions.CreateAsync(user.Id, selectedTenant, tenants, token);
+            if (selectedTenant is null)
+                return new(false, null, null, "TENANT_NOT_ALLOWED");
+            // A user with a forced password change gets a ticket only, never a session (feature 28, phase 3).
+            if (user.MustChangePassword)
+            {
+                var ticket = await passwordChangeTickets.IssueAsync(request.Email, selectedTenant.Id, token);
+                return new(false, ticket, user.Name, "PASSWORD_CHANGE_REQUIRED", null, selectedTenant.Id, tenants);
+            }
+            return await sessions.CreateAsync(user.Id, selectedTenant, tenants, token);
         }, ct);
     }
+
     private static AuthenticationResult CreateInvalidAuthenticationResult() =>
         new(false, null, null, "INVALID_CREDENTIALS");
 }

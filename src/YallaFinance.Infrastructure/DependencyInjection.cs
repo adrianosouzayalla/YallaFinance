@@ -224,6 +224,8 @@ public static class DependencyInjection
         services.TryAddScoped<YallaFinance.Application.Repositories.Authorization.IFunctionalityAccessRepository, PostgresFunctionalityAccessRepository>();
         services.AddScoped<IAuthenticationService, CatalogAuthenticationService>();
         services.AddScoped<IIntegrationAuthenticationService, IntegrationAuthenticationService>();
+        services.AddScoped<YallaFinance.Application.Services.Authentication.IPasswordChangeTicketStore,
+            YallaFinance.Infrastructure.Services.Authentication.PasswordChangeTicketStore>();
         return services;
     }
 }

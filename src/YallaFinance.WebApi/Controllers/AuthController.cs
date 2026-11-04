@@ -64,6 +64,24 @@ public sealed class AuthController(IMediator mediator) : ControllerBase
         return Ok(result.Value!.Page);
     }
 
+    // Forced password change (feature 28, phase 3). Anonymous, but bound to a ticket issued by a login that required the change.
+    [HttpPost("password-change-required")]
+    [AllowAnonymous]
+    [TypeFilter(typeof(AuthenticationAttemptFilter), Arguments = new object[] { AuthenticationAttemptKind.Login })]
+    [TypeFilter(typeof(UserManagementExceptionFilter))]
+    public async Task<IActionResult> ChangeRequiredPassword(
+        YallaFinance.Application.Features.Auth.ChangeRequiredPassword.ChangeRequiredPasswordCommand command,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(command, cancellationToken);
+        if (result.IsSuccess)
+            return NoContent();
+        var status = result.Errors.Any(error => error.Code == ErrorCodes.Conflict) ? StatusCodes.Status409Conflict
+            : result.Errors.Any(error => error.Code == ErrorCodes.Validation) ? StatusCodes.Status400BadRequest
+            : StatusCodes.Status401Unauthorized;
+        return StatusCode(status, new { errors = result.Errors });
+    }
+
     [HttpPost("password")]
     [Authorize]
     [TypeFilter(typeof(UserManagementExceptionFilter))]

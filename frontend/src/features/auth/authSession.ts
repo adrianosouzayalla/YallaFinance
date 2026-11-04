@@ -24,6 +24,10 @@ export interface LoginActionState {
   formError: string;
   email?: string;
   tenantOptions?: TenantOption[];
+  // Forced password change (feature 28, phase 3): the form asks for the new password; the ticket is single-purpose.
+  passwordChangeRequired?: boolean;
+  passwordChangeTicket?: string;
+  passwordChanged?: boolean;
 }
 export const INITIAL_LOGIN_STATE: LoginActionState = { fieldErrors: {}, formError: "" };
 export const SESSION_COOKIE = "yalla-finance-session";
