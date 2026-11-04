@@ -11,21 +11,16 @@ using YallaFinance.Application;
 
 namespace YallaFinance.Application.Features.Payments.GetPublicCheckout;
 
-public sealed class GetPublicCheckoutQueryHandler(IPaymentRepository service,
-    YallaFinance.Application.Services.Payments.IPublicPaymentAttemptService? attempts = null)
+public sealed class GetPublicCheckoutQueryHandler(IPaymentRepository service)
     : IRequestHandler<GetPublicCheckoutQuery, GetPublicCheckoutResult>
 {
+    /// <summary>
+    /// Read-only. Card attempts still pending are confirmed by the provider reconciliation batch of the worker,
+    /// so a public read never writes to the database or calls the card provider.
+    /// </summary>
     public async Task<GetPublicCheckoutResult> Handle(GetPublicCheckoutQuery request, CancellationToken cancellationToken)
     {
         var result = await service.GetPublicCheckoutAsync(request.Token, cancellationToken);
-        if (attempts is not null && result.IsSuccess && result.Value?.Attempt is
-            { InstrumentType: "CreditCard", PaymentMethodCode: { } code, AttemptReference: { } reference,
-              Status: "Unknown" or "AwaitingPayment" or "Processing" })
-        {
-            // No card input: the reservation can only recover an existing attempt, never create/pay one.
-            await attempts.StartOrGetAsync(request.Token, code, $"card-status-query:{reference}", cancellationToken);
-            result = await service.GetPublicCheckoutAsync(request.Token, cancellationToken);
-        }
         return new(result);
     }
 }

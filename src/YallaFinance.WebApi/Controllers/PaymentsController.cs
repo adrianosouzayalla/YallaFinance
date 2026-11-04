@@ -9,6 +9,7 @@ using YallaFinance.Application.Features.Payments.GeneratePaymentRequests;
 using YallaFinance.Application.Features.Payments.StartPublicPaymentAttempt;
 using YallaFinance.Application.Features.Payments.GetPaymentRequest;
 using YallaFinance.Application.Features.Payments.GetPublicCheckout;
+using YallaFinance.Application.Features.Payments.GetPublicCheckoutStatus;
 using YallaFinance.Application.Features.Payments.RecoverPaymentLink;
 using YallaFinance.Application.Features.Payments.CancelPaymentRequest;
 using YallaFinance.WebApi.Payments;
@@ -50,6 +51,14 @@ public sealed class PaymentsController(IMediator mediator) : ControllerBase
         Response.Headers.CacheControl = "no-store";
         Response.Headers["Referrer-Policy"] = "no-referrer";
         return (await mediator.Send(new GetPublicCheckoutQuery(token), ct)).Response.ToActionResult(this);
+    }
+
+    [AllowAnonymous, HttpGet("{token}/status")]
+    public async Task<IActionResult> GetCheckoutStatus(string token, CancellationToken ct)
+    {
+        Response.Headers.CacheControl = "no-store";
+        Response.Headers["Referrer-Policy"] = "no-referrer";
+        return (await mediator.Send(new GetPublicCheckoutStatusQuery(token), ct)).Response.ToActionResult(this);
     }
 
     [AllowAnonymous, HttpPost("{token}/attempts")]

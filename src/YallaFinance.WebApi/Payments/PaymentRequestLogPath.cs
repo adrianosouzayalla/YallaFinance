@@ -6,6 +6,7 @@ namespace YallaFinance.WebApi.Payments;
 public static class PaymentRequestLogPath
 {
     private const string PaymentPrefix = "/api/payments/";
+    private static readonly HashSet<string> TokenScopedRoutes = new(StringComparer.OrdinalIgnoreCase) { "attempts", "status" };
     private static readonly HashSet<string> FixedSingleSegmentRoutes = new(StringComparer.OrdinalIgnoreCase)
     {
         "charges",
@@ -21,8 +22,8 @@ public static class PaymentRequestLogPath
         if (suffix.Length == 1)
             return suffix[0].Length == 0 || FixedSingleSegmentRoutes.Contains(suffix[0])
                 ? path : "/api/payments/{token}";
-        if (suffix.Length == 2 && string.Equals(suffix[1], "attempts", StringComparison.OrdinalIgnoreCase))
-            return "/api/payments/{token}/attempts";
+        if (suffix.Length == 2 && TokenScopedRoutes.Contains(suffix[1]))
+            return $"/api/payments/{{token}}/{suffix[1].ToLowerInvariant()}";
         return path;
     }
 
