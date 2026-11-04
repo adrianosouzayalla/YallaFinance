@@ -1,0 +1,8 @@
+<Project>
+
+  <PropertyGroup>
+    <!-- Fixa as versões de todos os pacotes NuGet (inclusive transitivos) em packages.lock.json por projeto. -->
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+
+</Project>
