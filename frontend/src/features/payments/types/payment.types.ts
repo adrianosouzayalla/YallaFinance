@@ -83,6 +83,9 @@ export interface PublicPaymentCheckout {
   cardRequiredFields?: string[];
 }
 export interface PublicPaymentMethod { code: string; name: string; instrumentType?: string | null }
+/** Fields returned by the lightweight status check. Methods and contract are not included. */
+export type PublicPaymentCheckoutStatus = Pick<PublicPaymentCheckout,
+  "status" | "expiresAt" | "hasReceivedPayment" | "receivedAmount" | "receivedAt" | "settled" | "settledAt" | "attempt">;
 export interface PublicCardPaymentInput {
   holderName: string;
   number: string;

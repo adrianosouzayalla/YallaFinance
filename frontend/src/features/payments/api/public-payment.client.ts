@@ -1,7 +1,12 @@
 "use client";
 
 import { request } from "@/services/api/api-client";
-import type { PublicPaymentAttempt, PublicPaymentCheckout, PublicCardPaymentInput } from "../types/payment.types";
+import type {
+  PublicPaymentAttempt,
+  PublicPaymentCheckout,
+  PublicPaymentCheckoutStatus,
+  PublicCardPaymentInput,
+} from "../types/payment.types";
 
 export const publicPaymentApi = {
   startAttempt: (token: string, methodCode: string, idempotencyKey: string, card?: PublicCardPaymentInput) =>
@@ -10,6 +15,8 @@ export const publicPaymentApi = {
       body: JSON.stringify({ methodCode, ...(card ? { card } : {}) }),
       headers: { "Idempotency-Key": idempotencyKey },
     }),
+  getStatus: (token: string) =>
+    request<PublicPaymentCheckoutStatus>(`/api/payment/${encodeURIComponent(token)}/status`),
 };
 
-export type { PublicPaymentAttempt, PublicPaymentCheckout };
+export type { PublicPaymentAttempt, PublicPaymentCheckout, PublicPaymentCheckoutStatus };
