@@ -23,7 +23,11 @@ export default function NotFound() {
         <Stack sx={{ alignItems: "center", gap: 1.5 }}>
           <Typography
             component="h1"
-            sx={{ color: financeTokens.colors.header, fontSize: financeTokens.typography.pageTitle, fontWeight: 700 }}
+            sx={{
+              color: financeTokens.colors.header,
+              fontSize: financeTokens.typography.pageTitle,
+              fontWeight: 700,
+            }}
           >
             Página não encontrada
           </Typography>

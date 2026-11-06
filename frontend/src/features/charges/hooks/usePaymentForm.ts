@@ -1,8 +1,7 @@
-"use client";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { paymentSchema } from "../schemas/charge.schema";
-import type { PaymentInput } from "../types/charge.types";
+import type { PaymentInput } from "@/services/api/charges/charge.types";
 
 export function usePaymentForm(defaultValues: PaymentInput) {
   const form = useForm<PaymentInput>({ defaultValues, resolver: zodResolver(paymentSchema) });

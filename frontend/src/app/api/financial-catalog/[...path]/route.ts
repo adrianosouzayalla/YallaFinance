@@ -1,8 +1,8 @@
-import { authenticatedResponse } from "@/features/auth/server/session-boundary";
-import { catalogsServerApi } from "@/features/catalogs/api/catalogs.server";
+import { authenticatedResponse } from "@/features/auth/server/sessionBoundary";
+import { catalogsServerApi } from "@/services/api/catalogs/catalogsApi.server";
 
 type Context = { params: Promise<{ path: string[] }> };
-async function handle(request: Request, context: Context) {
+async function routeFinancialCatalogRequest(request: Request, context: Context) {
   const path = (await context.params).path.join("/");
   return authenticatedResponse(request, async (token) => {
     if (request.method === "POST" && path === "customers/lookup")
@@ -30,4 +30,9 @@ async function handle(request: Request, context: Context) {
     );
   });
 }
-export { handle as GET, handle as POST };
+export function GET(request: Request, context: Context) {
+  return routeFinancialCatalogRequest(request, context);
+}
+export function POST(request: Request, context: Context) {
+  return routeFinancialCatalogRequest(request, context);
+}

@@ -1,6 +1,6 @@
 import { validateDebtSelection } from "@/features/charges/businessRules";
-import type { ChargeDraft, PaymentInput } from "@/features/charges/types/charge.types";
-import type { Debt } from "@/features/debts/types/debt.types";
+import type { ChargeDraft, PaymentInput } from "@/services/api/charges/charge.types";
+import type { Debt } from "@/services/api/debts/debt.types";
 
 function roundCurrency(value: number): number {
   return Math.round(value * 100) / 100;

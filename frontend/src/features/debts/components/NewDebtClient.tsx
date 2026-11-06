@@ -3,39 +3,24 @@ import { FinancePageTitle } from "@/components/finance/FinancePageTitle";
 import { financeTokens } from "@/theme/designTokens";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import {
-  Alert,
-  Box,
-  Button,
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  MenuItem,
-  Select,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { useForm, useWatch, Controller } from "react-hook-form";
+import { Alert, Box, Button, Stack, Typography } from "@mui/material";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSessionContext } from "@/features/auth/context/SessionProvider";
 import { useCustomerSuggestions } from "@/features/customers/hooks/useCustomerSuggestions";
 import { useCustomerContracts } from "@/features/customers/hooks/useCustomerContracts";
 import { useFleetMovements } from "@/features/customers/hooks/useFleetMovements";
 import { isValidDateOnly } from "@/utils/date";
-import type { Customer } from "@/features/customers/types/customer.types";
+import type { Customer } from "@/services/api/customers/customer.types";
 import { useCategories } from "@/features/catalogs/hooks/useCategories";
-import { AutocompleteField } from "@/components/forms/AutocompleteField";
-import { CurrencyField } from "@/components/forms/CurrencyField";
-import { DateField } from "@/components/forms/DateField";
-import { PrototypePanel } from "@/components/ui/PrototypePanel";
-import { ApiError } from "@/services/api/api-client";
+import { ApiError } from "@/services/api/apiClient";
 import { useCreateManualDebt } from "../hooks/useCreateManualDebt";
-import { manualDebtSchema } from "../schemas/manual-debt.schema";
-import type { ManualDebtForm, ManualDebtInput } from "../types/manual-debt.types";
+import { manualDebtSchema } from "@/services/api/debts/manualDebt.schema";
+import type { ManualDebtForm, ManualDebtInput } from "@/services/api/debts/manualDebt.types";
 import { readManualDebtAttempt, storeManualDebtAttempt } from "../manualDebtAttempt";
 import { LoadingState } from "@/components/ui/LoadingState";
 import { createSecureUuidV4 } from "@/utils/secureUuid";
+import { ManualDebtFields, customerLabel } from "./ManualDebtFields";
 
 const defaults: ManualDebtForm = {
   customerId: "",
@@ -46,10 +31,6 @@ const defaults: ManualDebtForm = {
   dueDate: "",
   description: "",
 };
-function customerLabel(customer: Customer) {
-  const digits = customer.taxId.replace(/\D/g, "");
-  return `${customer.name} (${digits.length === 14 ? "CNPJ" : "CPF"} •••${digits.slice(-4)})`;
-}
 
 export function NewDebtClient() {
   const { tenantId, contextId } = useSessionContext();
@@ -190,287 +171,84 @@ function ManualDebtFormClient({ scope }: { scope: string }) {
     }
   }
 
-  const blockingLoad = categories.isPending || mutation.isPending || contracts.isFetchingNextPage ||
+  const blockingLoad =
+    categories.isPending ||
+    mutation.isPending ||
+    contracts.isFetchingNextPage ||
     (customerId !== "" && (contracts.isFetching || movements.isFetching));
   return (
     <>
-    <LoadingState mode="blocking" open={blockingLoad} message={mutation.isPending ? "Salvando débito..." : contracts.isFetchingNextPage ? "Carregando mais contratos..." : "Carregando dados do débito..."} />
-    <Stack spacing={3}>
-      <Box>
-        <FinancePageTitle
-          navigationHref="/debts/new"
+      <LoadingState
+        mode="blocking"
+        open={blockingLoad}
+        message={
+          mutation.isPending
+            ? "Salvando débito..."
+            : contracts.isFetchingNextPage
+              ? "Carregando mais contratos..."
+              : "Carregando dados do débito..."
+        }
+      />
+      <Stack spacing={3}>
+        <Box>
+          <FinancePageTitle navigationHref="/debts/new">Débito avulso</FinancePageTitle>
+          <Typography
+            color="text.secondary"
+            sx={{ fontSize: financeTokens.typography.body, mt: 0.5 }}
+          >
+            Registre um débito manual em aberto.
+          </Typography>
+        </Box>
+        {error ? <Alert severity="error">{error}</Alert> : null}
+        {success ? <Alert severity="success">Débito cadastrado em aberto.</Alert> : null}
+        {uncertain && !error ? (
+          <Alert severity="info">
+            Existe uma tentativa sem confirmação. Confirme esta tentativa antes de alterar os dados.
+          </Alert>
+        ) : null}
+        <Box
+          component="form"
+          sx={(theme) => ({
+            width: "100%",
+            maxWidth: { md: `calc(1036px + ${theme.spacing(5)} + 2px)` },
+          })}
+          noValidate
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (uncertain && attempt) void save(attempt);
+            else void form.handleSubmit(save)(event);
+          }}
         >
-          Débito avulso
-        </FinancePageTitle>
-        <Typography color="text.secondary" sx={{ fontSize: financeTokens.typography.body, mt: 0.5 }}>
-          Registre um débito manual em aberto.
-        </Typography>
-      </Box>
-      {error ? <Alert severity="error">{error}</Alert> : null}
-      {success ? <Alert severity="success">Débito cadastrado em aberto.</Alert> : null}
-      {uncertain && !error ? (
-        <Alert severity="info">
-          Existe uma tentativa sem confirmação. Confirme esta tentativa antes de alterar os dados.
-        </Alert>
-      ) : null}
-      <Box
-        component="form"
-        sx={(theme) => ({
-          width: "100%",
-          maxWidth: { md: `calc(1036px + ${theme.spacing(5)} + 2px)` },
-        })}
-        noValidate
-        onSubmit={(event) => {
-          event.preventDefault();
-          if (uncertain && attempt) void save(attempt);
-          else void form.handleSubmit(save)(event);
-        }}
-      >
-        <PrototypePanel title="Dados do débito">
-          <Stack spacing={2} sx={{ p: 2.5 }}>
-            <Box
-              sx={{
-                display: "grid",
-                gap: 2,
-                gridTemplateColumns: {
-                  xs: "1fr",
-                  md: "minmax(0, 480px) minmax(0, 240px) minmax(0, 300px)",
-                },
-                width: "100%",
-                maxWidth: { md: 1036 },
-                alignItems: "start",
-              }}
-            >
-              <AutocompleteField<Customer>
-                label="Locatário"
-                required
-                disabled={locked}
-                options={suggestions.items}
-                value={customer}
-                inputValue={search}
-                getOptionKey={(item) => item.customerId}
-                getOptionLabel={customerLabel}
-                onChange={changeCustomer}
-                onInputChange={(text) => {
-                  setSearch(text);
-                  if (customer) {
-                    setCustomer(null);
-                    setValue("customerId", "");
-                    setValue("contractId", "");
-                  }
-                }}
-                loading={suggestions.searching}
-                error={Boolean(errors.customerId) || suggestions.isError}
-                helperText={
-                  errors.customerId?.message ??
-                  (suggestions.isError
-                    ? "Não foi possível consultar os clientes. Tente novamente."
-                    : customer
-                      ? undefined
-                      : "Digite pelo menos 3 caracteres do nome ou documento")
-                }
-                noOptionsText={
-                  search.trim().length < 3
-                    ? "Digite pelo menos 3 caracteres"
-                    : "Nenhum cliente encontrado"
-                }
-              />
-              <Controller
-                name="occurrenceDate"
-                control={control}
-                render={({ field }) => (
-                  <DateField
-                    label="Data da ocorrência"
-                    required
-                    size="small"
-                    disabled={locked}
-                    value={field.value}
-                    onChange={(value) => {
-                      field.onChange(value ?? "");
-                      setValue("contractId", "");
-                    }}
-                    error={Boolean(errors.occurrenceDate)}
-                    helperText={errors.occurrenceDate?.message}
-                  />
-                )}
-              />
-              <Controller
-                name="contractId"
-                control={control}
-                render={({ field }) => (
-                  <FormControl
-                    fullWidth
-                    size="small"
-                    required
-                    error={Boolean(errors.contractId)}
-                    disabled={
-                      locked ||
-                      !customerId ||
-                      !validOccurrence ||
-                      contracts.isPending ||
-                      movements.isPending ||
-                      movements.isError
-                    }
-                  >
-                    <InputLabel id="manual-contract-label">Contrato / veículo</InputLabel>
-                    <Select {...field} label="Contrato / veículo" labelId="manual-contract-label">
-                      <MenuItem value="">Selecione um contrato</MenuItem>
-                      {contractItems.map((item) => (
-                        <MenuItem key={item.id} value={item.id}>
-                          {item.number} — {item.plate ?? "Sem placa"}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    <FormHelperText>
-                      {errors.contractId?.message ??
-                        (customerId &&
-                        validOccurrence &&
-                        !movements.isPending &&
-                        !movements.isError &&
-                        !contracts.isPending &&
-                        contractItems.length === 0 &&
-                        !contracts.isError
-                          ? "Nenhum contrato disponível para a ocorrência nas páginas carregadas."
-                          : undefined)}
-                    </FormHelperText>
-                  </FormControl>
-                )}
-              />
-            </Box>
-            {movements.isError ? (
-              <Alert
-                severity="error"
-                action={<Button onClick={() => void movements.refetch()}>Tentar novamente</Button>}
-              >
-                Não foi possível consultar a movimentação na data informada.
-              </Alert>
-            ) : null}
-            {contracts.isError ? (
-              <Alert
-                severity="error"
-                action={<Button onClick={() => void contracts.refetch()}>Tentar novamente</Button>}
-              >
-                Não foi possível consultar os contratos.
-              </Alert>
-            ) : null}
-            {contracts.hasNextPage ? (
-              <Button
-                disabled={contracts.isFetchingNextPage || locked}
-                onClick={() => void contracts.fetchNextPage()}
-              >
-                Carregar mais contratos
-              </Button>
-            ) : null}
-            {selectedContract ? (
-              <Typography color="text.secondary" variant="body2">
-                Produto: {selectedContract.product ?? "—"} · Frota: {selectedContract.fleet ?? "—"}
-              </Typography>
-            ) : null}
-            {categories.isError ? (
-              <Alert
-                severity="error"
-                action={<Button onClick={() => void categories.refetch()}>Tentar novamente</Button>}
-              >
-                Não foi possível consultar as categorias.
-              </Alert>
-            ) : null}
-            <Box
-              sx={{
-                display: "grid",
-                gap: 2,
-                gridTemplateColumns: {
-                  xs: "1fr",
-                  md: "minmax(0, 480px) minmax(0, 240px) minmax(0, 300px)",
-                },
-                width: "100%",
-                maxWidth: { md: 1036 },
-              }}
-            >
-              <Controller
-                name="categoryId"
-                control={control}
-                render={({ field }) => (
-                  <FormControl
-                    fullWidth
-                    size="small"
-                    required
-                    error={Boolean(errors.categoryId)}
-                    disabled={locked || categories.isPending}
-                  >
-                    <InputLabel id="manual-category-label">Categoria</InputLabel>
-                    <Select {...field} label="Categoria" labelId="manual-category-label">
-                      <MenuItem value="">Selecione uma categoria</MenuItem>
-                      {(categories.data ?? []).map((item) => (
-                        <MenuItem key={item.id} value={item.id}>
-                          {item.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    <FormHelperText>{errors.categoryId?.message}</FormHelperText>
-                  </FormControl>
-                )}
-              />
-              <Controller
-                name="amount"
-                control={control}
-                render={({ field }) => (
-                  <CurrencyField
-                    exactDecimal
-                    label="Valor"
-                    required
-                    size="small"
-                    disabled={locked}
-                    value={field.value || null}
-                    onChange={(value) => field.onChange(value ?? "")}
-                    error={Boolean(errors.amount)}
-                    helperText={errors.amount?.message}
-                  />
-                )}
-              />
-              <Controller
-                name="dueDate"
-                control={control}
-                render={({ field }) => (
-                  <DateField
-                    label="Vencimento"
-                    required
-                    size="small"
-                    disabled={locked}
-                    value={field.value}
-                    onChange={(value) => field.onChange(value ?? "")}
-                    error={Boolean(errors.dueDate)}
-                    helperText={errors.dueDate?.message}
-                  />
-                )}
-              />
-            </Box>
-            <TextField
-              {...register("description")}
-              sx={{ width: "100%", maxWidth: { md: 1036 } }}
-              label="Descrição"
-              required
-              size="small"
-              multiline
-              minRows={2}
-              disabled={locked}
-              error={Boolean(errors.description)}
-              helperText={errors.description?.message}
-            />
-            <Typography color="text.secondary" variant="body2">
-              Status inicial: Em aberto
-            </Typography>
+          <ManualDebtFields
+            control={control}
+            register={register}
+            errors={errors}
+            setValue={setValue}
+            locked={locked}
+            customer={customer}
+            search={search}
+            setSearch={setSearch}
+            setCustomer={setCustomer}
+            suggestions={suggestions}
+            onCustomerChange={changeCustomer}
+            customerId={customerId}
+            validOccurrence={validOccurrence}
+            contracts={contracts}
+            movements={movements}
+            contractItems={contractItems}
+            selectedContract={selectedContract}
+            categories={categories}
+          />
+          <Stack direction="row" spacing={1.5} sx={{ justifyContent: "flex-end", mt: 3 }}>
+            <Button component={Link} href="/debts" variant="outlined" disabled={mutation.isPending}>
+              Cancelar
+            </Button>
+            <Button type="submit" variant="contained" disabled={mutation.isPending}>
+              {uncertain ? "Confirmar tentativa" : "Salvar débito"}
+            </Button>
           </Stack>
-        </PrototypePanel>
-        <Stack direction="row" spacing={1.5} sx={{ justifyContent: "flex-end", mt: 3 }}>
-          <Button component={Link} href="/debts" variant="outlined" disabled={mutation.isPending}>
-            Cancelar
-          </Button>
-          <Button type="submit" variant="contained" disabled={mutation.isPending}>
-            {uncertain ? "Confirmar tentativa" : "Salvar débito"}
-          </Button>
-        </Stack>
-      </Box>
-    </Stack>
+        </Box>
+      </Stack>
     </>
   );
 }

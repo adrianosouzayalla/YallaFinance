@@ -14,7 +14,7 @@ import { financeTokens } from "@/theme/designTokens";
 
 const DEFAULT_TOAST_DURATION = 4_500;
 
-export interface ToastOptions {
+interface ToastOptions {
   message: ReactNode;
   severity?: AlertColor;
   duration?: number;
@@ -67,7 +67,7 @@ export function ToastProvider({ children }: PropsWithChildren) {
             onClose={closeToast}
             sx={{
               borderRadius: `${financeTokens.radius.control}px`,
-              boxShadow: "0 12px 28px rgba(7, 41, 101, 0.18)",
+              boxShadow: financeTokens.shadows.toast,
               minWidth: { sm: 360 },
               width: "100%",
             }}

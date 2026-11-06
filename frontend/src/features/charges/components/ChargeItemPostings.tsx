@@ -9,7 +9,7 @@ import { PrototypePanel } from "@/components/ui/PrototypePanel";
 import { formatCurrency } from "@/utils/currency";
 import { formatDate } from "@/utils/date";
 import { financeTokens } from "@/theme/designTokens";
-import type { ChargeItem } from "../types/charge.types";
+import type { ChargeItem } from "@/services/api/charges/charge.types";
 
 export type ChargePostingItem = ChargeItem & { formattedAmount?: string };
 

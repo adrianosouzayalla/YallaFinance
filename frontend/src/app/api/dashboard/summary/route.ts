@@ -1,5 +1,5 @@
-import { authenticatedResponse } from "@/features/auth/server/session-boundary";
-import { dashboardServerApi } from "@/features/dashboard/api/dashboard.server";
+import { authenticatedResponse } from "@/features/auth/server/sessionBoundary";
+import { dashboardServerApi } from "@/services/api/dashboard/dashboardApi.server";
 
 export async function GET(request: Request) {
   return authenticatedResponse(request, (token) =>

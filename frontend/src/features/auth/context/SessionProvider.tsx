@@ -1,9 +1,9 @@
 "use client";
 import { createContext, useContext, useEffect, type PropsWithChildren } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { clearBrowserSessionData } from "../browser-session";
+import { clearBrowserSessionData } from "../browserSession";
 
-export interface SessionContext {
+interface SessionContext {
   tenantId: string;
   contextId: string;
   userId?: string;

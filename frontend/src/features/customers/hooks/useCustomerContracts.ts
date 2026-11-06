@@ -1,7 +1,6 @@
-"use client";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useSessionContext } from "@/features/auth/context/SessionProvider";
-import { customersApi } from "../api/customers.client";
+import { customersApi } from "@/services/api/customers/customersApi.client";
 export function useCustomerContracts(customerId: string, occurrenceDate: string) {
   const { tenantId, contextId } = useSessionContext();
   return useInfiniteQuery({

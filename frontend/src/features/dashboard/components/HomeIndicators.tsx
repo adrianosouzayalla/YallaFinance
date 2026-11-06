@@ -33,7 +33,11 @@ export function HomeIndicators() {
         {summary.isError ? (
           <Alert
             severity="error"
-            action={<Button disabled={summary.isFetching} onClick={() => void retry()}>Tentar novamente</Button>}
+            action={
+              <Button disabled={summary.isFetching} onClick={() => void retry()}>
+                Tentar novamente
+              </Button>
+            }
           >
             {dashboard
               ? "Não foi possível atualizar os indicadores. Os valores anteriores foram mantidos."
@@ -41,12 +45,11 @@ export function HomeIndicators() {
           </Alert>
         ) : null}
         <Box>
-          <FinancePageTitle
-            navigationHref="/home"
+          <FinancePageTitle navigationHref="/home">Visão geral</FinancePageTitle>
+          <Typography
+            color="text.secondary"
+            sx={{ fontSize: financeTokens.typography.body, mt: 0.5 }}
           >
-            Visão geral
-          </FinancePageTitle>
-          <Typography color="text.secondary" sx={{ fontSize: financeTokens.typography.body, mt: 0.5 }}>
             Acompanhe os débitos e inicie uma cobrança.
           </Typography>
         </Box>
@@ -64,7 +67,7 @@ export function HomeIndicators() {
         >
           <OperationalIndicatorCard
             actionLabel="Ver débitos"
-            accent="#E7F0FF"
+            accent={financeTokens.colors.accentBlue}
             description="Débitos em aberto que ainda não têm cobrança iniciada."
             href="/debts?status=Open"
             icon="pending"
@@ -76,7 +79,7 @@ export function HomeIndicators() {
           />
           <OperationalIndicatorCard
             actionLabel="Ver débitos"
-            accent="#E7F8F1"
+            accent={financeTokens.colors.accentGreen}
             description="Débitos em cobrança no momento."
             href="/debts?status=InCollection"
             icon="active"
@@ -88,7 +91,7 @@ export function HomeIndicators() {
           />
           <OperationalIndicatorCard
             actionLabel="Ver vencidos"
-            accent="#FFF2E5"
+            accent={financeTokens.colors.accentOrange}
             description="Valor pendente após a data de vencimento."
             href="/debts?status=Open&sort=overdue"
             icon="overdue"
@@ -102,7 +105,7 @@ export function HomeIndicators() {
           />
           <OperationalIndicatorCard
             actionLabel="Ver débitos"
-            accent="#F2ECFF"
+            accent={financeTokens.colors.accentPurple}
             description="Débitos em cobrança que precisam de acompanhamento pela última movimentação."
             href="/debts?status=InCollection&sort=stale"
             icon="stale"

@@ -1,5 +1,6 @@
 "use client";
 
+import { checkoutColors } from "@/theme/checkoutTheme";
 import { Box, Typography } from "@mui/material";
 import { financeTokens } from "@/theme/designTokens";
 
@@ -33,7 +34,7 @@ export function CreditCardPreview({ number, name, expiry, cvvLength, focusedFiel
   const cardNumber = formatCardNumber(number);
   const cardHolderName = name.trim().toLocaleUpperCase("pt-BR") || "NOME NO CARTÃO";
   const securityCode = formatCvvLength(cvvLength);
-  const activeOutline = `0 0 0 2px ${financeTokens.colors.action}`;
+  const activeOutline = `0 0 0 2px ${checkoutColors.action}`;
 
   return (
     <Box
@@ -56,7 +57,7 @@ export function CreditCardPreview({ number, name, expiry, cvvLength, focusedFiel
               backfaceVisibility: "hidden",
               bgcolor: financeTokens.colors.header,
               borderRadius: "10px",
-              color: "#fff",
+              color: checkoutColors.white,
               inset: 0,
               overflow: "hidden",
               position: "absolute",
@@ -67,10 +68,31 @@ export function CreditCardPreview({ number, name, expiry, cvvLength, focusedFiel
             <Box
               component="svg"
               viewBox="0 0 48 38"
-              sx={{ color: "rgba(255,255,255,.72)", height: "auto", left: "7%", position: "absolute", top: "30%", width: "12%" }}
+              sx={{
+                color: checkoutColors.cardTextMuted,
+                height: "auto",
+                left: "7%",
+                position: "absolute",
+                top: "30%",
+                width: "12%",
+              }}
             >
-              <rect x="1" y="1" width="46" height="36" rx="6" fill="none" stroke="currentColor" strokeWidth="1.5" />
-              <path d="M16 1v36M32 1v36M1 13h15m16 0h15M1 25h15m16 0h15" fill="none" stroke="currentColor" strokeWidth="1.5" />
+              <rect
+                x="1"
+                y="1"
+                width="46"
+                height="36"
+                rx="6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              />
+              <path
+                d="M16 1v36M32 1v36M1 13h15m16 0h15M1 25h15m16 0h15"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              />
             </Box>
 
             <Typography
@@ -92,7 +114,17 @@ export function CreditCardPreview({ number, name, expiry, cvvLength, focusedFiel
               {cardNumber}
             </Typography>
 
-            <Box sx={{ alignItems: "flex-end", bottom: "10%", display: "flex", gap: 1.5, left: "7%", position: "absolute", right: "7%" }}>
+            <Box
+              sx={{
+                alignItems: "flex-end",
+                bottom: "10%",
+                display: "flex",
+                gap: 1.5,
+                left: "7%",
+                position: "absolute",
+                right: "7%",
+              }}
+            >
               <Typography
                 component="span"
                 noWrap
@@ -118,7 +150,14 @@ export function CreditCardPreview({ number, name, expiry, cvvLength, focusedFiel
                   outline: focusedField === "expiry" ? activeOutline : "none",
                 }}
               >
-                <Typography component="span" sx={{ color: "rgba(255,255,255,.72)", fontSize: "clamp(0.48rem, 2.5cqw, 0.62rem)", letterSpacing: ".06em" }}>
+                <Typography
+                  component="span"
+                  sx={{
+                    color: checkoutColors.cardTextMuted,
+                    fontSize: "clamp(0.48rem, 2.5cqw, 0.62rem)",
+                    letterSpacing: ".06em",
+                  }}
+                >
                   VALIDADE
                 </Typography>
                 <Typography component="span" sx={{ fontSize: "clamp(0.65rem, 3.8cqw, 0.84rem)" }}>
@@ -133,26 +172,51 @@ export function CreditCardPreview({ number, name, expiry, cvvLength, focusedFiel
               backfaceVisibility: "hidden",
               bgcolor: financeTokens.colors.header,
               borderRadius: "10px",
-              color: "#fff",
+              color: checkoutColors.white,
               inset: 0,
               overflow: "hidden",
               position: "absolute",
               transform: "rotateY(180deg)",
             }}
           >
-            <Box sx={{ bgcolor: "rgba(0,0,0,.35)", height: "20%", mt: "12%", width: "100%" }} />
-            <Box sx={{ alignItems: "stretch", display: "flex", gap: 1.5, height: "20%", mx: "7%", mt: "7%" }}>
-              <Box sx={{ bgcolor: "#e5edf5", borderRadius: "2px", flex: 1 }} />
-              <Box sx={{
-                alignContent: "center",
-                borderRadius: "2px",
-                display: "grid",
-                gap: 0.25,
-                minWidth: 42,
-                outline: activeOutline,
-                px: 0.5,
-              }}>
-                <Typography component="span" sx={{ color: "rgba(255,255,255,.72)", fontSize: "clamp(0.48rem, 2.5cqw, 0.62rem)", letterSpacing: ".06em" }}>
+            <Box
+              sx={{
+                bgcolor: checkoutColors.cardStripeShade,
+                height: "20%",
+                mt: "12%",
+                width: "100%",
+              }}
+            />
+            <Box
+              sx={{
+                alignItems: "stretch",
+                display: "flex",
+                gap: 1.5,
+                height: "20%",
+                mx: "7%",
+                mt: "7%",
+              }}
+            >
+              <Box sx={{ bgcolor: checkoutColors.cardStripe, borderRadius: "2px", flex: 1 }} />
+              <Box
+                sx={{
+                  alignContent: "center",
+                  borderRadius: "2px",
+                  display: "grid",
+                  gap: 0.25,
+                  minWidth: 42,
+                  outline: activeOutline,
+                  px: 0.5,
+                }}
+              >
+                <Typography
+                  component="span"
+                  sx={{
+                    color: checkoutColors.cardTextMuted,
+                    fontSize: "clamp(0.48rem, 2.5cqw, 0.62rem)",
+                    letterSpacing: ".06em",
+                  }}
+                >
                   CVV
                 </Typography>
                 <Typography component="span" sx={{ fontSize: "clamp(0.65rem, 3.8cqw, 0.84rem)" }}>
@@ -160,7 +224,16 @@ export function CreditCardPreview({ number, name, expiry, cvvLength, focusedFiel
                 </Typography>
               </Box>
             </Box>
-            <Typography component="span" sx={{ color: "rgba(255,255,255,.72)", display: "block", fontSize: "clamp(0.58rem, 3.2cqw, 0.72rem)", mx: "7%", mt: "6%" }}>
+            <Typography
+              component="span"
+              sx={{
+                color: checkoutColors.cardTextMuted,
+                display: "block",
+                fontSize: "clamp(0.58rem, 3.2cqw, 0.72rem)",
+                mx: "7%",
+                mt: "6%",
+              }}
+            >
               Código de segurança
             </Typography>
           </Box>

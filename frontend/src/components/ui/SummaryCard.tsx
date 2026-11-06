@@ -34,7 +34,11 @@ export function SummaryCard({
         borderColor: statusColor ? `${statusColor}.main` : financeTokens.colors.subtleBorder,
         borderWidth: active ? 2 : 1,
         bgcolor: color
-          ? (theme) => alpha(statusColor ? theme.palette[statusColor].main : theme.palette.text.primary, active ? 0.12 : 0.04)
+          ? (theme) =>
+              alpha(
+                statusColor ? theme.palette[statusColor].main : theme.palette.text.primary,
+                active ? 0.12 : 0.04,
+              )
           : undefined,
         borderRadius: `${financeTokens.radius.panel}px`,
         minHeight: financeTokens.density.summaryCardMinHeight,
@@ -44,11 +48,21 @@ export function SummaryCard({
           width: "100%",
           textAlign: "left",
           "&:hover": {
-            bgcolor: color ? (theme) => alpha(statusColor ? theme.palette[statusColor].main : theme.palette.text.primary, 0.08) : "action.hover",
+            bgcolor: color
+              ? (theme) =>
+                  alpha(
+                    statusColor ? theme.palette[statusColor].main : theme.palette.text.primary,
+                    0.08,
+                  )
+              : "action.hover",
           },
           "&.Mui-focusVisible": {
             outline: "2px solid",
-            outlineColor: statusColor ? `${statusColor}.main` : color ? "text.secondary" : financeTokens.colors.header,
+            outlineColor: statusColor
+              ? `${statusColor}.main`
+              : color
+                ? "text.secondary"
+                : financeTokens.colors.header,
             outlineOffset: 3,
           },
         }),
@@ -56,12 +70,19 @@ export function SummaryCard({
     >
       <Stack direction="row" sx={{ alignItems: "center", justifyContent: "space-between", gap: 2 }}>
         <Stack spacing={0.75}>
-          <Typography color="text.secondary" sx={{ fontSize: financeTokens.typography.secondary, fontWeight: 500 }}>
+          <Typography
+            color="text.secondary"
+            sx={{ fontSize: financeTokens.typography.secondary, fontWeight: 500 }}
+          >
             {label}
           </Typography>
           <Typography
             sx={{
-              color: color ? (neutral ? "text.secondary" : `${color}.main`) : financeTokens.colors.header,
+              color: color
+                ? neutral
+                  ? "text.secondary"
+                  : `${color}.main`
+                : financeTokens.colors.header,
               fontSize: financeTokens.typography.summaryMetric,
               fontWeight: 700,
             }}
@@ -80,9 +101,17 @@ export function SummaryCard({
               height: financeTokens.density.summaryIconSize,
               flexShrink: 0,
               borderRadius: 2,
-              color: color ? (neutral ? "text.secondary" : `${color}.main`) : financeTokens.colors.header,
+              color: color
+                ? neutral
+                  ? "text.secondary"
+                  : `${color}.main`
+                : financeTokens.colors.header,
               bgcolor: color
-                ? (theme) => alpha(statusColor ? theme.palette[statusColor].main : theme.palette.text.primary, 0.12)
+                ? (theme) =>
+                    alpha(
+                      statusColor ? theme.palette[statusColor].main : theme.palette.text.primary,
+                      0.12,
+                    )
                 : financeTokens.colors.stepBackground,
             }}
           >

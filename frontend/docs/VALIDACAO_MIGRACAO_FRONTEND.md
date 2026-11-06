@@ -68,7 +68,6 @@ as chamadas financeiras estão em `src/features/finance/apiFinanceRepository.ts`
 | Débitos             | GET `/api/debts`                                       | page, pageSize, sortDirection; status técnico, categories, startDate, endDate e sortBy opcionais |
 | Detalhe             | GET `/api/debts/{id}`                                  | ID codificado; 404 vira null no repository                                                       |
 | Categorias          | GET `/api/categories`                                  | Reutilizadas para traduzir categoryId em nome                                                    |
-| Formas de pagamento | GET `/api/payment-methods`                             | Catálogo autorizado                                                                              |
 | Clientes            | GET `/api/customers?search=...`                        | Termo codificado                                                                                 |
 | Movimentações       | GET `/api/customers/{id}/movements?occurrenceDate=...` | ID codificado; data da ocorrência                                                                |
 | Cobrança            | POST `/api/charges`                                    | Header `Idempotency-Key`; corpo descrito abaixo                                                  |

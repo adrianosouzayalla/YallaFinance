@@ -12,14 +12,7 @@ import { useEffect } from "react";
 import { usePaymentForm } from "@/features/charges/hooks/usePaymentForm";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  Alert,
-  Box,
-  Button,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Alert, Box, Button, Stack, TextField, Typography } from "@mui/material";
 import { ChargeStepper } from "@/features/charges/components/ChargeStepper";
 import { PrototypePanel } from "@/components/ui/PrototypePanel";
 import { DateField } from "@/components/forms/DateField";
@@ -27,9 +20,9 @@ import { ReadOnlyMappingPanel } from "@/features/charges/components/ReadOnlyMapp
 import { buildSelectedDebtDraft } from "@/features/charges/chargeFlow";
 import { getChargeToday, validateChargeDueDate } from "@/features/charges/businessRules";
 import { resolveSelectedDebts } from "@/features/debts/debtNavigation";
-import type { ChargeDraft, PaymentInput } from "@/features/charges/types/charge.types";
-import type { Debt } from "@/features/debts/types/debt.types";
-import type { FleetMovement } from "@/features/customers/types/customer.types";
+import type { ChargeDraft, PaymentInput } from "@/services/api/charges/charge.types";
+import type { Debt } from "@/services/api/debts/debt.types";
+import type { FleetMovement } from "@/services/api/customers/customer.types";
 import { useToast } from "@/providers/ToastProvider";
 import { financeTokens } from "@/theme/designTokens";
 
@@ -90,10 +83,11 @@ export function ChargeReviewClient() {
   const searchParams = useSearchParams();
   const { setChargeIntent, draft: activeDraft } = useChargeDraft();
   const source = searchParams.get("source");
-  const selectedIds = source === "selected"
-    ? (searchParams.get("debtIds") ?? "").split(",").filter(Boolean) : [];
+  const selectedIds =
+    source === "selected" ? (searchParams.get("debtIds") ?? "").split(",").filter(Boolean) : [];
   const availableDebts = useChargeDebts(selectedIds).data?.items ?? [];
-  const customerName = source === "selected" ? availableDebts[0]?.tenantName : activeDraft?.customerName;
+  const customerName =
+    source === "selected" ? availableDebts[0]?.tenantName : activeDraft?.customerName;
   const customerQuery = useCustomers(customerName ?? "", Boolean(customerName));
   const categoryQuery = useCategories();
   const customers = customerQuery.data ?? [];
@@ -152,9 +146,7 @@ export function ChargeReviewClient() {
   if (!resolution.ok) {
     return (
       <Stack spacing={3}>
-        <FinancePageTitle
-          navigationHref="/charges/new"
-        >
+        <FinancePageTitle navigationHref="/charges/new">
           {source === "standalone" ? "Cobrança avulsa" : "Cobrança"}
         </FinancePageTitle>
         <Alert severity="error">{resolution.message}</Alert>
@@ -205,9 +197,7 @@ export function ChargeReviewClient() {
 
   return (
     <Stack spacing={3}>
-      <FinancePageTitle
-        navigationHref="/charges/new"
-      >
+      <FinancePageTitle navigationHref="/charges/new">
         {source === "standalone" ? "Cobrança avulsa" : "Cobrança"}
       </FinancePageTitle>
       <ChargeStepper activeStep={1} />
@@ -244,21 +234,35 @@ export function ChargeReviewClient() {
             </Stack>
           </PrototypePanel>
           <PrototypePanel title="Débitos incluídos na cobrança">
-            <SelectablePaginatedTable rows={debts} paginationMode="client" showSelection={false}
+            <SelectablePaginatedTable
+              rows={debts}
+              paginationMode="client"
+              showSelection={false}
               columns={[
                 { id: "category", header: "Categoria", render: (debt) => debt.category },
                 { id: "description", header: "Descrição", render: (debt) => debt.description },
-                { id: "amount", header: "Valor", align: "right", render: (debt) => formatCurrency(debt.amount) },
+                {
+                  id: "amount",
+                  header: "Valor",
+                  align: "right",
+                  render: (debt) => formatCurrency(debt.amount),
+                },
               ]}
-              getRowId={(debt) => debt.id} selectedRows={[]} onSelectionChange={() => {}}
-              tableLabel="Débitos incluídos" headerSx={{ backgroundColor: financeTokens.colors.tableHeader }}
-              pagination={{ page: 1, pageSize: Math.max(1, debts.length), totalItems: debts.length, onPageChange: () => {} }} />
+              getRowId={(debt) => debt.id}
+              selectedRows={[]}
+              onSelectionChange={() => {}}
+              tableLabel="Débitos incluídos"
+              headerSx={{ backgroundColor: financeTokens.colors.tableHeader }}
+              pagination={{
+                page: 1,
+                pageSize: Math.max(1, debts.length),
+                totalItems: debts.length,
+                onPageChange: () => {},
+              }}
+            />
             <Box sx={{ display: "flex", justifyContent: "space-between", px: 2.5, py: 2 }}>
               <Typography variant="h2">Total a cobrar</Typography>
-              <Typography
-                variant="h2"
-                sx={{ color: financeTokens.colors.header }}
-              >
+              <Typography variant="h2" sx={{ color: financeTokens.colors.header }}>
                 {formatCurrency(total)}
               </Typography>
             </Box>
@@ -267,7 +271,6 @@ export function ChargeReviewClient() {
         <Stack spacing={3}>
           <PrototypePanel title="Forma de cobrança">
             <Stack spacing={2} sx={{ p: 2.5 }}>
-
               <DateField
                 error={paymentDueError}
                 helperText={paymentDueMessage}
@@ -318,11 +321,7 @@ export function ChargeReviewClient() {
             >
               ‹ Voltar
             </Button>
-            <Button
-              disabled={paymentDueError}
-              type="submit"
-              variant="contained"
-            >
+            <Button disabled={paymentDueError} type="submit" variant="contained">
               Gerar cobrança
             </Button>
           </Stack>

@@ -10,7 +10,11 @@ type PaymentStatusRefreshOptions = {
 };
 
 /** Keeps the checkout up to date in the background: on tab return and while a payment is awaited. */
-export function usePaymentStatusRefresh({ refresh, refreshWhenVisible, pollingIntervalMs }: PaymentStatusRefreshOptions) {
+export function usePaymentStatusRefresh({
+  refresh,
+  refreshWhenVisible,
+  pollingIntervalMs,
+}: PaymentStatusRefreshOptions) {
   // The latest refresh is read through a ref, so a new function identity does not restart the timers.
   const latestRefresh = useRef(refresh);
   useEffect(() => {

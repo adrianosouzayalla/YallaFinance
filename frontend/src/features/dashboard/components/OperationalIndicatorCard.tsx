@@ -3,7 +3,7 @@ import Link from "next/link";
 import { financeTokens } from "@/theme/designTokens";
 import { AnimatedMetric } from "@/features/dashboard/components/AnimatedMetric";
 
-export type IndicatorIconName = "pending" | "active" | "overdue" | "stale";
+type IndicatorIconName = "pending" | "active" | "overdue" | "stale";
 
 interface OperationalIndicatorCardProps {
   label: string;
@@ -119,7 +119,7 @@ export function OperationalIndicatorCard({
         textDecoration: "none",
         transition: "box-shadow 160ms ease, transform 160ms ease",
         "&:hover": {
-          boxShadow: "0 10px 24px rgba(7, 41, 101, 0.14)",
+          boxShadow: financeTokens.shadows.indicatorCard,
           transform: "translateY(-2px)",
         },
       }}
@@ -131,7 +131,7 @@ export function OperationalIndicatorCard({
               aria-hidden="true"
               sx={{
                 alignItems: "center",
-                backgroundColor: "rgba(255,255,255,0.78)",
+                backgroundColor: financeTokens.overlays.indicatorCard,
                 borderRadius: "50%",
                 color: financeTokens.colors.header,
                 display: "flex",
@@ -142,7 +142,13 @@ export function OperationalIndicatorCard({
             >
               <IndicatorIcon name={icon} />
             </Box>
-            <Typography sx={{ color: financeTokens.colors.header, fontSize: financeTokens.typography.body, fontWeight: 700 }}>
+            <Typography
+              sx={{
+                color: financeTokens.colors.header,
+                fontSize: financeTokens.typography.body,
+                fontWeight: 700,
+              }}
+            >
               {label}
             </Typography>
           </Box>
@@ -162,10 +168,20 @@ export function OperationalIndicatorCard({
         </Box>
 
         <Stack direction="row" spacing={0.75} sx={{ alignItems: "baseline" }}>
-          <Typography sx={{ color: financeTokens.colors.header, fontSize: financeTokens.typography.metric, fontWeight: 700, lineHeight: 1.1 }}>
+          <Typography
+            sx={{
+              color: financeTokens.colors.header,
+              fontSize: financeTokens.typography.metric,
+              fontWeight: 700,
+              lineHeight: 1.1,
+            }}
+          >
             <AnimatedMetric value={value} format={valueFormat} />
           </Typography>
-          <Typography color="text.secondary" sx={{ fontSize: financeTokens.typography.secondary, fontWeight: 600 }}>
+          <Typography
+            color="text.secondary"
+            sx={{ fontSize: financeTokens.typography.secondary, fontWeight: 600 }}
+          >
             {valueLabel}
           </Typography>
         </Stack>
@@ -179,7 +195,13 @@ export function OperationalIndicatorCard({
           </Typography>
         </Stack>
 
-        <Box sx={{ color: financeTokens.colors.header, fontSize: financeTokens.typography.body, fontWeight: 700 }}>
+        <Box
+          sx={{
+            color: financeTokens.colors.header,
+            fontSize: financeTokens.typography.body,
+            fontWeight: 700,
+          }}
+        >
           {actionLabel} →
         </Box>
       </Stack>

@@ -1,6 +1,6 @@
 import { centsToDecimal, decimalToCents, formatExactCurrencyInput } from "@/utils/currency";
 import { isValidDateOnly } from "@/utils/date";
-import type { CreateDirectChargeRequest } from "@/features/charges/types/charge.types";
+import type { CreateDirectChargeRequest } from "@/services/api/charges/charge.types";
 import { isValidPlate, normalizePlate } from "@/utils/plate";
 
 export interface DirectChargeBasics {

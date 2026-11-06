@@ -4,11 +4,7 @@ import type { ReactNode } from "react";
 import { Box, Typography } from "@mui/material";
 import { financeTokens } from "@/theme/designTokens";
 
-const defaultSteps = [
-  "Dados da cobrança",
-  "Revisão e forma de cobrança",
-  "Confirmação",
-];
+const defaultSteps = ["Dados da cobrança", "Revisão e forma de cobrança", "Confirmação"];
 
 interface ChargeStepperProps {
   activeStep: number;

@@ -1,9 +1,8 @@
-"use client";
 import { useCallback, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSessionContext } from "@/features/auth/context/SessionProvider";
-import { debtsApi } from "../api/debts.client";
-import type { DebtFilters } from "../types/debt.types";
+import { debtsApi } from "@/services/api/debts/debtsApi.client";
+import type { DebtFilters } from "@/services/api/debts/debt.types";
 
 export function useDebtSearch() {
   const { tenantId, contextId } = useSessionContext();

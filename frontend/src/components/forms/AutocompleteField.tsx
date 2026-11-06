@@ -3,7 +3,7 @@
 import { Autocomplete, CircularProgress, TextField } from "@mui/material";
 import type { ReactNode } from "react";
 
-export interface AutocompleteFieldProps<T> {
+interface AutocompleteFieldProps<T> {
   label: string;
   options: readonly T[];
   value: T | null;
@@ -23,9 +23,21 @@ export interface AutocompleteFieldProps<T> {
 
 /** Controlled remote suggestions. Queries and business rules belong to the caller. */
 export function AutocompleteField<T>({
-  label, options, value, inputValue, getOptionLabel, getOptionKey,
-  onChange, onInputChange, loading = false, disabled, required,
-  error, helperText, placeholder, noOptionsText = "Nenhum resultado encontrado",
+  label,
+  options,
+  value,
+  inputValue,
+  getOptionLabel,
+  getOptionKey,
+  onChange,
+  onInputChange,
+  loading = false,
+  disabled,
+  required,
+  error,
+  helperText,
+  placeholder,
+  noOptionsText = "Nenhum resultado encontrado",
 }: AutocompleteFieldProps<T>) {
   return (
     <Autocomplete<T, false, false, false>
@@ -61,7 +73,12 @@ export function AutocompleteField<T>({
             ...params.slotProps,
             input: {
               ...params.slotProps.input,
-              endAdornment: <>{loading ? <CircularProgress size={18} aria-label="Buscando opções" /> : null}{params.slotProps.input.endAdornment}</>,
+              endAdornment: (
+                <>
+                  {loading ? <CircularProgress size={18} aria-label="Buscando opções" /> : null}
+                  {params.slotProps.input.endAdornment}
+                </>
+              ),
             },
           }}
         />

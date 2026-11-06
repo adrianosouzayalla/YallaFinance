@@ -1,6 +1,6 @@
-import { backendResponse } from "@/services/api/api-client.server";
+import { publicPaymentServerApi } from "@/services/api/payments/publicPaymentApi.server";
 import { PublicPaymentCheckoutClient } from "@/features/payments/components/checkout/PublicPaymentCheckoutClient";
-import type { PublicPaymentCheckout } from "@/features/payments/types/payment.types";
+import type { PublicPaymentCheckout } from "@/services/api/payments/payment.types";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -15,10 +15,13 @@ export default async function PublicPaymentPage({ params }: PageProps<"/pay/[tok
   let checkout: PublicPaymentCheckout | null = null;
   let temporaryError = false;
   try {
-    const response = await backendResponse(`/api/payments/${encodeURIComponent(token)}`);
+    const response = await publicPaymentServerApi.checkout(token);
     if (response.ok) checkout = (await response.json()) as PublicPaymentCheckout;
-    else temporaryError = response.status >= 500 || response.status === 408 || response.status === 429;
-  } catch { temporaryError = true; }
+    else
+      temporaryError = response.status >= 500 || response.status === 408 || response.status === 429;
+  } catch {
+    temporaryError = true;
+  }
   return (
     <PublicPaymentCheckoutClient
       token={token}

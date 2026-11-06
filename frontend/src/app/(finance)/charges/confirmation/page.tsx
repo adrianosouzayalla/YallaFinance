@@ -2,5 +2,9 @@ import { ChargeConfirmationClient } from "@/features/charges/components/ChargeCo
 import { ChargeDataBoundary } from "@/features/charges/components/ChargeDataBoundary";
 
 export default function ChargeConfirmationPage() {
-  return <ChargeDataBoundary><ChargeConfirmationClient /></ChargeDataBoundary>;
+  return (
+    <ChargeDataBoundary>
+      <ChargeConfirmationClient />
+    </ChargeDataBoundary>
+  );
 }

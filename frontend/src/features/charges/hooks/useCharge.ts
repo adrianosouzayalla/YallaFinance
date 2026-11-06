@@ -1,8 +1,6 @@
-"use client";
-
 import { useQuery } from "@tanstack/react-query";
 import { useSessionContext } from "@/features/auth/context/SessionProvider";
-import { chargesApi } from "../api/charges.client";
+import { chargesApi } from "@/services/api/charges/chargesApi.client";
 
 export function useCharge(id: string | null) {
   const { tenantId, contextId } = useSessionContext();

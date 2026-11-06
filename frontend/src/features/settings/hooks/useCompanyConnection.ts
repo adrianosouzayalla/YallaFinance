@@ -1,8 +1,10 @@
-"use client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSessionContext } from "@/features/auth/context/SessionProvider";
-import { companyApi } from "../company.client";
-import { DEFAULT_DETAIL_FILTERS, type CompanyConnectionDetailFilter } from "../types";
+import { companyApi } from "@/services/api/settings/settingsApi.client";
+import {
+  DEFAULT_DETAIL_FILTERS,
+  type CompanyConnectionDetailFilter,
+} from "@/services/api/settings/types";
 
 export function useCompanyConnection(
   id: string | null,
@@ -32,9 +34,10 @@ export function useCompanyCatalog(kind: "categories" | "payment-methods", enable
   const { tenantId, contextId } = useSessionContext();
   return useQuery({
     queryKey: ["company", tenantId, contextId, "catalog", kind],
-    queryFn: ({ signal }) => kind === "categories"
-      ? companyApi.listCategories({ contextId, signal })
-      : companyApi.listPaymentMethods({ contextId, signal }),
+    queryFn: ({ signal }) =>
+      kind === "categories"
+        ? companyApi.listCategories({ contextId, signal })
+        : companyApi.listPaymentMethods({ contextId, signal }),
     enabled: enabled && !!tenantId && !!contextId,
     staleTime: 60_000,
     retry: false,
@@ -47,7 +50,12 @@ export function useInvalidateCompanyConnection(id: string | null) {
   const { tenantId, contextId } = useSessionContext();
   const queryClient = useQueryClient();
   return async () => {
-    await queryClient.invalidateQueries({ queryKey: ["company", tenantId, contextId, "connections"] });
-    if (id) await queryClient.invalidateQueries({ queryKey: ["company", tenantId, contextId, "connection", id] });
+    await queryClient.invalidateQueries({
+      queryKey: ["company", tenantId, contextId, "connections"],
+    });
+    if (id)
+      await queryClient.invalidateQueries({
+        queryKey: ["company", tenantId, contextId, "connection", id],
+      });
   };
 }

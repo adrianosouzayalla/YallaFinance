@@ -27,7 +27,7 @@ export interface SelectableTableColumn<T, SortKey extends string = string> {
   getSortValue?(row: T): string | number | boolean | Date | null | undefined;
 }
 
-export interface SelectablePaginatedTableProps<T, SortKey extends string = string> {
+interface SelectablePaginatedTableProps<T, SortKey extends string = string> {
   rows: readonly T[];
   paginationMode?: "server" | "client";
   showSelection?: boolean;
@@ -83,26 +83,50 @@ export function SelectablePaginatedTable<T, SortKey extends string = string>({
 }: SelectablePaginatedTableProps<T, SortKey>) {
   const [localSort, setLocalSort] = useState<{ key: string; direction: "asc" | "desc" }>();
   const currentKey = onSort ? sortBy : localSort?.key;
-  const currentDirection = onSort ? sortDirection : localSort?.direction ?? "asc";
+  const currentDirection = onSort ? sortDirection : (localSort?.direction ?? "asc");
   const sortColumn = columns.find((column) => (column.sortKey ?? column.id) === currentKey);
-  const orderedRows = !onSort && sortColumn ? [...rows].sort((left, right) => {
-    const value = (row: T) => sortColumn.getSortValue ? sortColumn.getSortValue(row)
-      : (row as Record<string, unknown>)[sortColumn.id] ?? sortColumn.render(row);
-    const a = value(left); const b = value(right);
-    if (a == null) return b == null ? 0 : 1;
-    if (b == null) return -1;
-    const result = a instanceof Date && b instanceof Date ? a.getTime() - b.getTime()
-      : typeof a === "number" && typeof b === "number" ? a - b
-      : typeof a === "boolean" && typeof b === "boolean" ? Number(a) - Number(b)
-      : String(a).localeCompare(String(b), "pt-BR", { numeric: true, sensitivity: "base" });
-    return currentDirection === "asc" ? result : -result;
-  }) : rows;
-  const visibleRows = paginationMode === "client"
-    ? orderedRows.slice((pagination.page - 1) * pagination.pageSize, pagination.page * pagination.pageSize) : orderedRows;
+  const orderedRows =
+    !onSort && sortColumn
+      ? [...rows].sort((left, right) => {
+          const value = (row: T) =>
+            sortColumn.getSortValue
+              ? sortColumn.getSortValue(row)
+              : ((row as Record<string, unknown>)[sortColumn.id] ?? sortColumn.render(row));
+          const a = value(left);
+          const b = value(right);
+          if (a == null) return b == null ? 0 : 1;
+          if (b == null) return -1;
+          const result =
+            a instanceof Date && b instanceof Date
+              ? a.getTime() - b.getTime()
+              : typeof a === "number" && typeof b === "number"
+                ? a - b
+                : typeof a === "boolean" && typeof b === "boolean"
+                  ? Number(a) - Number(b)
+                  : String(a).localeCompare(String(b), "pt-BR", {
+                      numeric: true,
+                      sensitivity: "base",
+                    });
+          return currentDirection === "asc" ? result : -result;
+        })
+      : rows;
+  const visibleRows =
+    paginationMode === "client"
+      ? orderedRows.slice(
+          (pagination.page - 1) * pagination.pageSize,
+          pagination.page * pagination.pageSize,
+        )
+      : orderedRows;
   function changeSort(column: SelectableTableColumn<T, SortKey>) {
     const key = column.sortKey ?? column.id;
-    if (onSort) { onSort(key as SortKey); return; }
-    setLocalSort({ key, direction: currentKey === key && currentDirection === "asc" ? "desc" : "asc" });
+    if (onSort) {
+      onSort(key as SortKey);
+      return;
+    }
+    setLocalSort({
+      key,
+      direction: currentKey === key && currentDirection === "asc" ? "desc" : "asc",
+    });
     if (paginationMode === "client") pagination.onPageChange(1);
   }
   const selectedIds = new Set(selectedRows.map(getRowId));
@@ -188,15 +212,35 @@ export function SelectablePaginatedTable<T, SortKey extends string = string>({
                   hover
                   key={getRowId(row)}
                   selected={selectedIds.has(getRowId(row))}
-                  onClick={onRowClick ? (event) => {
-                    if (loading) return;
-                    if (event.target instanceof Element && event.target.closest("button, a, input, label, [role='button'], [role='checkbox'], [role='radio'], [role='switch']")) return;
-                    onRowClick(row);
-                  } : undefined}
-                  onKeyDown={onRowClick ? (event) => {
-                    if (loading || event.target !== event.currentTarget || (event.key !== "Enter" && event.key !== " ")) return;
-                    event.preventDefault(); onRowClick(row);
-                  } : undefined}
+                  onClick={
+                    onRowClick
+                      ? (event) => {
+                          if (loading) return;
+                          if (
+                            event.target instanceof Element &&
+                            event.target.closest(
+                              "button, a, input, label, [role='button'], [role='checkbox'], [role='radio'], [role='switch']",
+                            )
+                          )
+                            return;
+                          onRowClick(row);
+                        }
+                      : undefined
+                  }
+                  onKeyDown={
+                    onRowClick
+                      ? (event) => {
+                          if (
+                            loading ||
+                            event.target !== event.currentTarget ||
+                            (event.key !== "Enter" && event.key !== " ")
+                          )
+                            return;
+                          event.preventDefault();
+                          onRowClick(row);
+                        }
+                      : undefined
+                  }
                   tabIndex={onRowClick ? 0 : undefined}
                   aria-label={getRowClickLabel?.(row)}
                   aria-disabled={onRowClick ? loading : undefined}

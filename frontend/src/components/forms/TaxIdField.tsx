@@ -3,7 +3,7 @@
 import { TextField, type TextFieldProps } from "@mui/material";
 import { NumberFormatBase } from "react-number-format";
 
-export type TaxIdFieldProps = Omit<
+type TaxIdFieldProps = Omit<
   TextFieldProps,
   "value" | "defaultValue" | "onChange" | "type" | "select" | "multiline"
 > & {

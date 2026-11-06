@@ -12,12 +12,34 @@ import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 
 export type FinanceNavigationItem = {
-  href: "/home" | "/debts" | "/debts/new" | "/charges/new" | "/direct-charges/new" | "/jobs" | "/payments" | "/sessions" | "/users" | "/profiles" | "/settings";
+  href:
+    | "/home"
+    | "/debts"
+    | "/debts/new"
+    | "/charges/new"
+    | "/direct-charges/new"
+    | "/jobs"
+    | "/payments"
+    | "/sessions"
+    | "/users"
+    | "/profiles"
+    | "/settings";
   label: string;
   breadcrumb: string;
   functionalityCode?: string;
   alwaysVisible?: boolean;
-  icon: "home" | "debts" | "new-debt" | "charges" | "direct-charges" | "jobs" | "payments" | "sessions" | "users" | "profiles" | "settings";
+  icon:
+    | "home"
+    | "debts"
+    | "new-debt"
+    | "charges"
+    | "direct-charges"
+    | "jobs"
+    | "payments"
+    | "sessions"
+    | "users"
+    | "profiles"
+    | "settings";
   Icon: ComponentType<{ fontSize?: "small" | "medium" | "large" | "inherit" }>;
 };
 
@@ -54,8 +76,22 @@ export const financeNavigation: readonly FinanceNavigationItem[] = [
     icon: "charges",
     Icon: AccountBalanceWalletOutlinedIcon,
   },
-  { href: "/direct-charges/new", label: "Cobrança Direta", breadcrumb: "Cobrança Direta", functionalityCode: "DIRECT_CHARGES_CREATE", icon: "direct-charges", Icon: RequestQuoteOutlinedIcon },
-  { href: "/payments", label: "Pagamentos", breadcrumb: "Pagamentos", functionalityCode: "PAYMENTS", icon: "payments", Icon: PaymentsOutlinedIcon },
+  {
+    href: "/direct-charges/new",
+    label: "Cobrança Direta",
+    breadcrumb: "Cobrança Direta",
+    functionalityCode: "DIRECT_CHARGES_CREATE",
+    icon: "direct-charges",
+    Icon: RequestQuoteOutlinedIcon,
+  },
+  {
+    href: "/payments",
+    label: "Pagamentos",
+    breadcrumb: "Pagamentos",
+    functionalityCode: "PAYMENTS",
+    icon: "payments",
+    Icon: PaymentsOutlinedIcon,
+  },
   {
     href: "/jobs",
     label: "Jobs",
@@ -64,18 +100,52 @@ export const financeNavigation: readonly FinanceNavigationItem[] = [
     icon: "jobs",
     Icon: ListAltOutlinedIcon,
   },
-  { href: "/sessions", label: "Sessões ativas", breadcrumb: "Sessões ativas", functionalityCode: "SESSIONS", icon: "sessions", Icon: DevicesOutlinedIcon },
-  { href: "/users", label: "Usuários", breadcrumb: "Usuários", functionalityCode: "USERS", icon: "users", Icon: PeopleOutlineIcon },
-  { href: "/profiles", label: "Perfis", breadcrumb: "Perfis", functionalityCode: "PROFILES", icon: "profiles", Icon: BadgeOutlinedIcon },
-  { href: "/settings", label: "Configurações", breadcrumb: "Configurações do sistema", functionalityCode: "SYSTEM_SETTINGS", icon: "settings", Icon: SettingsOutlinedIcon },
+  {
+    href: "/sessions",
+    label: "Sessões ativas",
+    breadcrumb: "Sessões ativas",
+    functionalityCode: "SESSIONS",
+    icon: "sessions",
+    Icon: DevicesOutlinedIcon,
+  },
+  {
+    href: "/users",
+    label: "Usuários",
+    breadcrumb: "Usuários",
+    functionalityCode: "USERS",
+    icon: "users",
+    Icon: PeopleOutlineIcon,
+  },
+  {
+    href: "/profiles",
+    label: "Perfis",
+    breadcrumb: "Perfis",
+    functionalityCode: "PROFILES",
+    icon: "profiles",
+    Icon: BadgeOutlinedIcon,
+  },
+  {
+    href: "/settings",
+    label: "Configurações",
+    breadcrumb: "Configurações do sistema",
+    functionalityCode: "SYSTEM_SETTINGS",
+    icon: "settings",
+    Icon: SettingsOutlinedIcon,
+  },
 ];
 
 export function getRequiredFunctionality(pathname: string): string | undefined {
   if (pathname === "/settings" || pathname.startsWith("/settings/")) return "SYSTEM_SETTINGS";
-  if (pathname === "/direct-charges" || pathname.startsWith("/direct-charges/")) return "DIRECT_CHARGES_CREATE";
+  if (pathname === "/direct-charges" || pathname.startsWith("/direct-charges/"))
+    return "DIRECT_CHARGES_CREATE";
   if (pathname === "/debts/new") return "DEBTS_CREATE";
   if (pathname === "/debts" || pathname.startsWith("/debts/")) return "DEBTS";
-  if (["/charges/new", "/charges/review", "/charges/confirmation", "/charges/success"].includes(pathname)) return "CHARGES_CREATE";
+  if (
+    ["/charges/new", "/charges/review", "/charges/confirmation", "/charges/success"].includes(
+      pathname,
+    )
+  )
+    return "CHARGES_CREATE";
   if (pathname.startsWith("/charges/")) return "CHARGES";
   if (pathname === "/payments" || pathname.startsWith("/payments/")) return "PAYMENTS";
   if (pathname === "/jobs" || pathname.startsWith("/jobs/")) return "JOBS";
@@ -88,15 +158,26 @@ export function getRequiredFunctionality(pathname: string): string | undefined {
 export function getActiveNavigationItem(pathname: string): FinanceNavigationItem {
   const exact = financeNavigation.find((item) => item.href === pathname);
   if (exact) return exact;
-  const parent = pathname === "/direct-charges" || pathname.startsWith("/direct-charges/") ? "/direct-charges/new"
-    : pathname.startsWith("/settings/") ? "/settings"
-    : pathname.startsWith("/users/") ? "/users"
-    : pathname.startsWith("/profiles/") ? "/profiles"
-    : pathname.startsWith("/sessions/") ? "/sessions"
-    : pathname.startsWith("/charges/") ? "/charges/new"
-    : pathname.startsWith("/debts/") ? "/debts"
-    : pathname.startsWith("/jobs/") ? "/jobs"
-    : pathname.startsWith("/payments/") ? "/payments" : "/home";
+  const parent =
+    pathname === "/direct-charges" || pathname.startsWith("/direct-charges/")
+      ? "/direct-charges/new"
+      : pathname.startsWith("/settings/")
+        ? "/settings"
+        : pathname.startsWith("/users/")
+          ? "/users"
+          : pathname.startsWith("/profiles/")
+            ? "/profiles"
+            : pathname.startsWith("/sessions/")
+              ? "/sessions"
+              : pathname.startsWith("/charges/")
+                ? "/charges/new"
+                : pathname.startsWith("/debts/")
+                  ? "/debts"
+                  : pathname.startsWith("/jobs/")
+                    ? "/jobs"
+                    : pathname.startsWith("/payments/")
+                      ? "/payments"
+                      : "/home";
   return financeNavigation.find((item) => item.href === parent) ?? financeNavigation[0];
 }
 

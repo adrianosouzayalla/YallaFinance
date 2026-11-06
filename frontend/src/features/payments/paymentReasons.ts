@@ -6,4 +6,6 @@ const reasons: Record<string, string> = {
   InconsistentAmount: "Valor inconsistente",
   IneligibleDebts: "Débitos ou contrato indisponíveis",
 };
-export function paymentBlockLabel(reason: string | null): string { return reason ? reasons[reason] ?? "Indisponível" : "Disponível"; }
+export function paymentBlockLabel(reason: string | null): string {
+  return reason ? (reasons[reason] ?? "Indisponível") : "Disponível";
+}

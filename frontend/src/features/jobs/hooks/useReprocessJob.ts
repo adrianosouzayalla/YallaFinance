@@ -1,8 +1,7 @@
-"use client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSessionContext } from "@/features/auth/context/SessionProvider";
-import { ApiError } from "@/services/api/api-error";
-import { jobsApi } from "../api/jobs.client";
+import { ApiError } from "@/services/api/apiError";
+import { jobsApi } from "@/services/api/jobs/jobsApi.client";
 
 export function useReprocessJob(id: string) {
   const { tenantId, contextId } = useSessionContext();

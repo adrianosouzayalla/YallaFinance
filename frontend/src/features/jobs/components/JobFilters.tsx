@@ -1,7 +1,11 @@
 "use client";
 import { Button, FormControl, InputLabel, Select, Stack, TextField } from "@mui/material";
-import type { JobFilters as Filters, JobStatus, JobTypeOption } from "../types/job.types";
-import { jobStatusLabels } from "../utils/job-format";
+import type {
+  JobFilters as Filters,
+  JobStatus,
+  JobTypeOption,
+} from "@/services/api/jobs/job.types";
+import { jobStatusLabels } from "../utils/jobFormat";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import FilterAltOffOutlinedIcon from "@mui/icons-material/FilterAltOffOutlined";
 import { DateField } from "@/components/forms/DateField";

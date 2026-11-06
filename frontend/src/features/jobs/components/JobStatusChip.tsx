@@ -1,6 +1,6 @@
 import { StatusBadge } from "@/components/ui/StatusBadge";
-import type { JobStatus } from "../types/job.types";
-import { jobStatusLabels } from "../utils/job-format";
+import type { JobStatus } from "@/services/api/jobs/job.types";
+import { jobStatusLabels } from "../utils/jobFormat";
 export function JobStatusChip({ status }: { status: JobStatus }) {
   return (
     <StatusBadge

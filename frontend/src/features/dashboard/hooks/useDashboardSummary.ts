@@ -1,7 +1,6 @@
-"use client";
 import { useQuery } from "@tanstack/react-query";
 import { useSessionContext } from "@/features/auth/context/SessionProvider";
-import { dashboardApi } from "../api/dashboard.client";
+import { dashboardApi } from "@/services/api/dashboard/dashboardApi.client";
 import { usePageVisibility } from "@/hooks/usePageVisibility";
 export function useDashboardSummary() {
   const { tenantId, contextId } = useSessionContext();

@@ -1,8 +1,11 @@
-"use client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSessionContext } from "@/features/auth/context/SessionProvider";
-import { companyApi } from "../company.client";
-import type { CompanyConnectionFilter, CompanySettingsByGroup, CompanySettingsGroup } from "../types";
+import { companyApi } from "@/services/api/settings/settingsApi.client";
+import type {
+  CompanyConnectionFilter,
+  CompanySettingsByGroup,
+  CompanySettingsGroup,
+} from "@/services/api/settings/types";
 
 export function useCompanySettings<T extends CompanySettingsGroup>(group: T, enabled: boolean) {
   const { tenantId, contextId } = useSessionContext();
@@ -40,6 +43,9 @@ export function useSaveCompanySettings<T extends CompanySettingsGroup>(group: T)
   return useMutation({
     mutationFn: (values: Partial<CompanySettingsByGroup[T]>) =>
       companyApi.saveSettings(group, values, { contextId }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["company", tenantId, contextId, "settings", group] }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: ["company", tenantId, contextId, "settings", group],
+      }),
   });
 }

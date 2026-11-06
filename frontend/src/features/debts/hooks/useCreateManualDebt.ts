@@ -1,8 +1,7 @@
-"use client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSessionContext } from "@/features/auth/context/SessionProvider";
-import { debtsApi } from "../api/debts.client";
-import type { ManualDebtInput } from "../types/manual-debt.types";
+import { debtsApi } from "@/services/api/debts/debtsApi.client";
+import type { ManualDebtInput } from "@/services/api/debts/manualDebt.types";
 export function useCreateManualDebt() {
   const { tenantId, contextId } = useSessionContext();
   const client = useQueryClient();

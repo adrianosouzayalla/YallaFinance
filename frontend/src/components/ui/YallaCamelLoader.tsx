@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { financeTokens } from "@/theme/designTokens";
 
 type Props = {
   size?: number;
@@ -12,7 +13,7 @@ type Props = {
 /** CSS-only animation. No client boundary or animation dependency required. */
 export function YallaCamelLoader({
   size = 80,
-  color = "#072965",
+  color = financeTokens.colors.brandNavy,
   label = "Carregando...",
   showLabel = false,
   className = "",

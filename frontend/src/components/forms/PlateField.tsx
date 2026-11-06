@@ -3,7 +3,7 @@
 import { TextField, type TextFieldProps } from "@mui/material";
 import { formatPlate, isValidPlate, normalizePlate } from "@/utils/plate";
 
-export type PlateFieldProps = Omit<
+type PlateFieldProps = Omit<
   TextFieldProps,
   "value" | "defaultValue" | "onChange" | "type" | "select" | "multiline"
 > & {

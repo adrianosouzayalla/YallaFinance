@@ -1,8 +1,6 @@
-"use client";
-
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useSessionContext } from "@/features/auth/context/SessionProvider";
-import { financialCatalogApi } from "../api/financial-catalog.client";
+import { financialCatalogApi } from "@/services/api/catalogs/financialCatalogApi.client";
 
 export function useFinancialCostCenters() {
   const { tenantId, contextId } = useSessionContext();

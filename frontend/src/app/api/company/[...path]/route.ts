@@ -1,4 +1,4 @@
-import { companyProxy } from "@/features/settings/server/company-proxy";
+import { companyProxy } from "@/features/settings/server/companyProxy";
 
 export async function GET(request: Request, context: { params: Promise<{ path: string[] }> }) {
   return companyProxy(request, (await context.params).path);

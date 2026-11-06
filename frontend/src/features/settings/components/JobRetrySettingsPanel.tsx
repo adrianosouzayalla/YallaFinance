@@ -1,9 +1,14 @@
 "use client";
+import { financeTokens } from "@/theme/designTokens";
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useCompanySettings, useSaveCompanySettings } from "../hooks/useCompanySettings";
 import { useToast } from "@/providers/ToastProvider";
-import { useQueryFeedback, useReportMutationBusy, type BusyReporter } from "./shared/SettingsComponents";
+import {
+  useQueryFeedback,
+  useReportMutationBusy,
+  type BusyReporter,
+} from "./shared/SettingsComponents";
 
 // Tipos de Job com retry automatico, canonicos no backend (JobRetryTypes).
 const JOB_RETRY_TYPES: { type: string; label: string }[] = [
@@ -22,30 +27,57 @@ export function JobRetrySettingsPanel({ reportBusy }: { reportBusy: BusyReporter
   const savedLimit = (type: string) => String(query.data?.limits[type] ?? 0);
   const limitValue = (type: string) => draft[type] ?? savedLimit(type);
 
-  useQueryFeedback("job-retry-query", query, reportBusy, "Não foi possível carregar as configurações de Jobs.");
+  useQueryFeedback(
+    "job-retry-query",
+    query,
+    reportBusy,
+    "Não foi possível carregar as configurações de Jobs.",
+  );
   useReportMutationBusy("job-retry-save", save.isPending, reportBusy);
 
-  function handleSave() {
-    const limits = Object.fromEntries(JOB_RETRY_TYPES.map(({ type }) => [type, Number(limitValue(type))]));
-    save.mutate({ limits }, {
-      onSuccess: () => showToast({ severity: "success", message: "Configurações de Jobs salvas." }),
-      onError: () => showToast({ severity: "error", message: "Não foi possível salvar as configurações de Jobs. Tente novamente." }),
-    });
+  function handleSaveJobRetrySettings() {
+    const limits = Object.fromEntries(
+      JOB_RETRY_TYPES.map(({ type }) => [type, Number(limitValue(type))]),
+    );
+    save.mutate(
+      { limits },
+      {
+        onSuccess: () =>
+          showToast({ severity: "success", message: "Configurações de Jobs salvas." }),
+        onError: () =>
+          showToast({
+            severity: "error",
+            message: "Não foi possível salvar as configurações de Jobs. Tente novamente.",
+          }),
+      },
+    );
   }
 
   return (
     <Stack spacing={2.5}>
-      <Typography sx={{ color: "#5b6d91" }}>
+      <Typography sx={{ color: financeTokens.colors.helpText }}>
         Retentativas automáticas por tipo de Job. Zero desativa o reprocessamento automático.
       </Typography>
       {JOB_RETRY_TYPES.map(({ type, label }) => (
-        <TextField key={type} label={label} type="number" value={limitValue(type)} disabled={!query.data}
+        <TextField
+          key={type}
+          label={label}
+          type="number"
+          value={limitValue(type)}
+          disabled={!query.data}
           onChange={(event) => setDraft((current) => ({ ...current, [type]: event.target.value }))}
           slotProps={{ htmlInput: { min: 0, max: MAXIMUM_RETRIES, step: 1 } }}
-          helperText={`De 0 a ${MAXIMUM_RETRIES} retentativas. Tipo: ${type}`} />
+          helperText={`De 0 a ${MAXIMUM_RETRIES} retentativas. Tipo: ${type}`}
+        />
       ))}
       <Box>
-        <Button variant="contained" onClick={handleSave} disabled={!query.data || save.isPending}>Salvar configurações de Jobs</Button>
+        <Button
+          variant="contained"
+          onClick={handleSaveJobRetrySettings}
+          disabled={!query.data || save.isPending}
+        >
+          Salvar configurações de Jobs
+        </Button>
       </Box>
     </Stack>
   );

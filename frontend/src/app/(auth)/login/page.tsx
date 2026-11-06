@@ -25,8 +25,7 @@ export default function LoginPage() {
           position: "relative",
           backgroundColor: financeTokens.colors.header,
           "&::after": {
-            background:
-              "linear-gradient(90deg, rgba(7, 41, 101, 0.04) 0%, rgba(7, 41, 101, 0.12) 48%, rgba(7, 41, 101, 0.3) 72%, rgba(7, 41, 101, 0.52) 100%)",
+            background: financeTokens.overlays.loginAccent,
             content: '""',
             inset: 0,
             pointerEvents: "none",
@@ -51,8 +50,8 @@ export default function LoginPage() {
       <Box
         sx={{
           alignItems: "center",
-          backgroundColor: "#FBFCFF",
-          boxShadow: "-12px 0 30px rgba(7, 41, 101, 0.035)",
+          backgroundColor: financeTokens.colors.authBackground,
+          boxShadow: financeTokens.shadows.loginPanel,
           display: "flex",
           justifyContent: "center",
           minHeight: financeTokens.shell.viewportHeight,

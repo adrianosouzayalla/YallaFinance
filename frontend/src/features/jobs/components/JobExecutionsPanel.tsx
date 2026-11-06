@@ -9,8 +9,8 @@ import {
 import { JobStatusChip } from "./JobStatusChip";
 import { JobJsonPanel } from "./JobJsonPanel";
 import { JobDetailField } from "./JobDetailField";
-import { formatJobDate, formatJobDuration, jobErrorMessage } from "../utils/job-format";
-import type { JobExecution, JobExecutionPage } from "../types/job.types";
+import { formatJobDate, formatJobDuration, jobErrorMessage } from "../utils/jobFormat";
+import type { JobExecution, JobExecutionPage } from "@/services/api/jobs/job.types";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 
 function findProviderError(value: unknown): { code?: string; message?: string } | undefined {
@@ -24,7 +24,8 @@ function findProviderError(value: unknown): { code?: string; message?: string } 
   if (!value || typeof value !== "object") return undefined;
   const record = value as Record<string, unknown>;
   const code = typeof record.providerErrorCode === "string" ? record.providerErrorCode : undefined;
-  const message = typeof record.providerErrorMessage === "string" ? record.providerErrorMessage : undefined;
+  const message =
+    typeof record.providerErrorMessage === "string" ? record.providerErrorMessage : undefined;
   if (code || message) return { code, message };
   for (const child of Object.values(record)) {
     const found = findProviderError(child);
@@ -33,9 +34,7 @@ function findProviderError(value: unknown): { code?: string; message?: string } 
   return undefined;
 }
 
-function findManualProviderError(
-  value: unknown,
-): { code?: string; message?: string } | undefined {
+function findManualProviderError(value: unknown): { code?: string; message?: string } | undefined {
   if (Array.isArray(value)) {
     for (const item of value) {
       const found = findManualProviderError(item);
@@ -48,7 +47,8 @@ function findManualProviderError(
   if (record.source === "manual-reproduction") {
     return {
       code: typeof record.providerErrorCode === "string" ? record.providerErrorCode : undefined,
-      message: typeof record.providerErrorMessage === "string" ? record.providerErrorMessage : undefined,
+      message:
+        typeof record.providerErrorMessage === "string" ? record.providerErrorMessage : undefined,
     };
   }
   for (const child of Object.values(record)) {
@@ -64,9 +64,13 @@ export function JobExecutionsPanel({
   onPageChange,
   error,
   onRefresh,
-  sortBy, sortDirection, onSort,
+  sortBy,
+  sortDirection,
+  onSort,
 }: {
-  sortBy?: string; sortDirection?: "asc" | "desc"; onSort?(key: string): void;
+  sortBy?: string;
+  sortDirection?: "asc" | "desc";
+  onSort?(key: string): void;
   data?: JobExecutionPage;
   page: number;
   onPageChange(page: number): void;
@@ -76,10 +80,12 @@ export function JobExecutionsPanel({
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = data?.items.find((item) => item.id === selectedId) ?? data?.items[0];
   const providerError = findProviderError(selected?.details) ?? findProviderError(selected?.result);
-  const manualProviderEvidence = providerError ? undefined : data?.items
-    .filter((item) => item.id !== selected?.id)
-    .map((item) => ({ executionId: item.id, error: findManualProviderError(item.details) }))
-    .find((item) => item.error);
+  const manualProviderEvidence = providerError
+    ? undefined
+    : data?.items
+        .filter((item) => item.id !== selected?.id)
+        .map((item) => ({ executionId: item.id, error: findManualProviderError(item.details) }))
+        .find((item) => item.error);
   const columns: SelectableTableColumn<JobExecution>[] = [
     {
       id: "id",
@@ -133,7 +139,9 @@ export function JobExecutionsPanel({
           </Alert>
         )}
         <SelectablePaginatedTable
-          sortBy={sortBy} sortDirection={sortDirection} onSort={onSort}
+          sortBy={sortBy}
+          sortDirection={sortDirection}
+          onSort={onSort}
           rows={data?.items ?? []}
           columns={columns}
           getRowId={(e) => e.id}
@@ -144,10 +152,10 @@ export function JobExecutionsPanel({
           tableLabel="Execuções do Job"
           emptyContent={
             error && !data
-                ? "Consulta indisponível."
-                : page === 1
-                  ? "Ainda não há execução registrada."
-                  : "Nenhuma execução nesta página."
+              ? "Consulta indisponível."
+              : page === 1
+                ? "Ainda não há execução registrada."
+                : "Nenhuma execução nesta página."
           }
           pagination={{
             page,
@@ -181,15 +189,27 @@ export function JobExecutionsPanel({
               <Alert severity="error">
                 <Typography sx={{ fontWeight: 600 }}>Erro retornado pelo provedor</Typography>
                 {providerError.message && <Typography>{providerError.message}</Typography>}
-                {providerError.code && <Typography variant="body2">Código: {providerError.code}</Typography>}
+                {providerError.code && (
+                  <Typography variant="body2">Código: {providerError.code}</Typography>
+                )}
               </Alert>
             )}
             {manualProviderEvidence?.error && (
               <Alert severity="warning">
-                <Typography sx={{ fontWeight: 600 }}>Última reprodução manual da integração financeira</Typography>
-                {manualProviderEvidence.error.message && <Typography>{manualProviderEvidence.error.message}</Typography>}
-                {manualProviderEvidence.error.code && <Typography variant="body2">Código: {manualProviderEvidence.error.code}</Typography>}
-                <Typography variant="body2">Execução de origem: {manualProviderEvidence.executionId}</Typography>
+                <Typography sx={{ fontWeight: 600 }}>
+                  Última reprodução manual da integração financeira
+                </Typography>
+                {manualProviderEvidence.error.message && (
+                  <Typography>{manualProviderEvidence.error.message}</Typography>
+                )}
+                {manualProviderEvidence.error.code && (
+                  <Typography variant="body2">
+                    Código: {manualProviderEvidence.error.code}
+                  </Typography>
+                )}
+                <Typography variant="body2">
+                  Execução de origem: {manualProviderEvidence.executionId}
+                </Typography>
               </Alert>
             )}
             <JobJsonPanel

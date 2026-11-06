@@ -1,0 +1,83 @@
+.yallaCamel {
+  display: block;
+  overflow: visible;
+}
+.yallaCamel .walkBody {
+  animation: yallaBob 1.2s ease-in-out infinite;
+}
+.yallaCamel .leg {
+  transform-box: view-box;
+  animation: yallaStride 1.2s linear infinite;
+}
+.yallaCamel .farRear {
+  transform-origin: 174px 292px;
+  animation-delay: -0.6s;
+}
+.yallaCamel .farFront {
+  transform-origin: 310px 291px;
+  animation-delay: -0.72s;
+}
+.yallaCamel .nearRear {
+  transform-origin: 150px 289px;
+}
+.yallaCamel .nearFront {
+  transform-origin: 271px 291px;
+  animation-delay: -0.12s;
+}
+@keyframes yallaStride {
+  0% {
+    transform: rotate(-16deg);
+  }
+  25% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(16deg);
+  }
+  75% {
+    transform: translateY(-12px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(-16deg);
+  }
+}
+@keyframes yallaBob {
+  0%,
+  50%,
+  100% {
+    transform: translateY(0);
+  }
+  25%,
+  75% {
+    transform: translateY(-4px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .yallaCamel .leg,
+  .yallaCamel .walkBody {
+    animation: none !important;
+  }
+}
+.yallaLoader {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.yallaLoaderLabel {
+  font:
+    500 14px/1.5 system-ui,
+    sans-serif;
+  color: inherit;
+}
+.yallaSrOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

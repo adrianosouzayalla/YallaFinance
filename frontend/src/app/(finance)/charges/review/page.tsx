@@ -5,7 +5,9 @@ import { ChargeDataBoundary } from "@/features/charges/components/ChargeDataBoun
 export default function ChargeReviewPage() {
   return (
     <Suspense fallback={null}>
-      <ChargeDataBoundary><ChargeReviewClient /></ChargeDataBoundary>
+      <ChargeDataBoundary>
+        <ChargeReviewClient />
+      </ChargeDataBoundary>
     </Suspense>
   );
 }

@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { PrototypePanel } from "@/components/ui/PrototypePanel";
 import { financeTokens } from "@/theme/designTokens";
-import type { FleetMovement } from "@/features/customers/types/customer.types";
+import type { FleetMovement } from "@/services/api/customers/customer.types";
 
 interface VehicleMatchPanelProps {
   loading: boolean;
@@ -85,7 +85,11 @@ function VehicleDetails({ movement }: { movement: FleetMovement }) {
             {label}
           </Typography>
           <Typography
-            sx={{ fontSize: financeTokens.typography.body, fontWeight: index === 0 ? 700 : 500, textAlign: "right" }}
+            sx={{
+              fontSize: financeTokens.typography.body,
+              fontWeight: index === 0 ? 700 : 500,
+              textAlign: "right",
+            }}
           >
             {value}
           </Typography>

@@ -2,7 +2,7 @@
 
 import { Alert, Button } from "@mui/material";
 import { SuccessStatusIcon } from "@/components/ui/SuccessStatusIcon";
-import type { ChargeProcessing } from "../types/charge.types";
+import type { ChargeProcessing } from "@/services/api/charges/charge.types";
 
 export function ChargeProcessingPanel({
   processing,

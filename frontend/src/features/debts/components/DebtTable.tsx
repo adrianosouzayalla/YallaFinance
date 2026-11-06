@@ -7,8 +7,8 @@ import {
   SelectablePaginatedTable,
   type SelectableTableColumn,
 } from "@/components/ui/SelectablePaginatedTable";
-import { StatusBadge } from "@/features/debts/components/StatusBadge";
-import type { Debt, DebtSortKey } from "@/features/debts/types/debt.types";
+import { DebtStatusBadge } from "@/features/debts/components/DebtStatusBadge";
+import type { Debt, DebtSortKey } from "@/services/api/debts/debt.types";
 import { financeTokens } from "@/theme/designTokens";
 
 interface DebtTableProps {
@@ -49,7 +49,7 @@ const columns: SelectableTableColumn<Debt, DebtSortKey>[] = [
     id: "status",
     header: "Status",
     sortKey: "status",
-    render: (debt) => <StatusBadge status={debt.status} />,
+    render: (debt) => <DebtStatusBadge status={debt.status} />,
   },
   {
     id: "action",

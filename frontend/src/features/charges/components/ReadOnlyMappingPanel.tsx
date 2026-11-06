@@ -1,7 +1,7 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { PrototypePanel } from "@/components/ui/PrototypePanel";
 import { financeTokens } from "@/theme/designTokens";
-import type { FleetMovement } from "@/features/customers/types/customer.types";
+import type { FleetMovement } from "@/services/api/customers/customer.types";
 
 interface ReadOnlyMappingPanelProps {
   category: string;
@@ -38,7 +38,10 @@ export function ReadOnlyMappingPanel({
         ];
 
   return (
-    <PrototypePanel borderStyle="dashed" title="Parametrização financeira (automática, somente leitura)">
+    <PrototypePanel
+      borderStyle="dashed"
+      title="Parametrização financeira (automática, somente leitura)"
+    >
       <Stack spacing={0} sx={{ px: 2.5, py: 1 }}>
         {mappingRows.map(([label, value]) => (
           <Box
@@ -50,10 +53,15 @@ export function ReadOnlyMappingPanel({
               py: 1.25,
             }}
           >
-            <Typography color="text.secondary" sx={{ fontSize: financeTokens.typography.secondary }}>
+            <Typography
+              color="text.secondary"
+              sx={{ fontSize: financeTokens.typography.secondary }}
+            >
               {label}
             </Typography>
-            <Typography sx={{ fontSize: financeTokens.typography.body, fontWeight: 600, textAlign: "right" }}>
+            <Typography
+              sx={{ fontSize: financeTokens.typography.body, fontWeight: 600, textAlign: "right" }}
+            >
               {value}
             </Typography>
           </Box>

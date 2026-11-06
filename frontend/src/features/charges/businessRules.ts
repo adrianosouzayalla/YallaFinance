@@ -1,5 +1,5 @@
-import type { Debt, SelectionValidation } from "@/features/debts/types/debt.types";
-import type { FieldErrors, StandaloneChargeDraft } from "@/features/charges/types/charge.types";
+import type { Debt, SelectionValidation } from "@/services/api/debts/debt.types";
+import type { FieldErrors, StandaloneChargeDraft } from "@/services/api/charges/charge.types";
 
 export function getChargeToday(): string {
   const parts = new Intl.DateTimeFormat("en-CA", {

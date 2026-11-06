@@ -23,7 +23,7 @@ import type {
   Debt,
   DebtFilters as DebtFiltersValue,
   DebtSortKey,
-} from "@/features/debts/types/debt.types";
+} from "@/services/api/debts/debt.types";
 import { useToast } from "@/providers/ToastProvider";
 
 const defaultFilters: DebtFiltersValue = {
@@ -230,11 +230,7 @@ export function DebtsPageClient() {
       <Stack spacing={3}>
         <Stack direction="row" sx={{ alignItems: "center", justifyContent: "space-between" }}>
           <Box>
-            <FinancePageTitle
-              navigationHref="/debts"
-            >
-              Débitos
-            </FinancePageTitle>
+            <FinancePageTitle navigationHref="/debts">Débitos</FinancePageTitle>
           </Box>
           <Stack direction="row" spacing={1.5}>
             <Button

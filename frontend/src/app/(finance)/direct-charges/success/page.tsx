@@ -1,4 +1,4 @@
-import { DirectChargeSuccessClient } from "@/features/direct-charges/DirectChargeClient";
+import { DirectChargeSuccessClient } from "@/features/direct-charges/DirectChargeSuccessClient";
 
 export default async function DirectChargeSuccessPage({
   searchParams,

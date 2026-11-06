@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { Alert, Box, Button, Divider, Stack, Typography } from "@mui/material";
 import { PrototypePanel } from "@/components/ui/PrototypePanel";
-import { StatusBadge } from "@/features/debts/components/StatusBadge";
+import { DebtStatusBadge } from "@/features/debts/components/DebtStatusBadge";
 import { buildReviewUrl } from "@/features/debts/debtNavigation";
 import { useToast } from "@/providers/ToastProvider";
 import { LoadingState } from "@/components/ui/LoadingState";
@@ -61,11 +61,7 @@ export function DebtDetailClient({ debtId }: DebtDetailClientProps) {
     <Stack spacing={3}>
       <Stack direction="row" sx={{ alignItems: "center", justifyContent: "space-between" }}>
         <Box>
-          <FinancePageTitle
-            navigationHref="/debts"
-          >
-            Detalhe do débito
-          </FinancePageTitle>
+          <FinancePageTitle navigationHref="/debts">Detalhe do débito</FinancePageTitle>
           <Typography color="text.secondary">Referência: {debt.id}</Typography>
         </Box>
         <Stack direction="row" spacing={1.25}>
@@ -90,7 +86,7 @@ export function DebtDetailClient({ debtId }: DebtDetailClientProps) {
           <DetailRow label="Categoria" value={debt.category} />
           <DetailRow label="Valor" value={formatCurrency(debt.amount)} />
           <DetailRow label="Data de origem" value={formatDate(debt.occurrenceDate)} />
-          <DetailRow label="Status" value={<StatusBadge status={debt.status} />} />
+          <DetailRow label="Status" value={<DebtStatusBadge status={debt.status} />} />
         </Stack>
       </PrototypePanel>
 
@@ -98,7 +94,7 @@ export function DebtDetailClient({ debtId }: DebtDetailClientProps) {
         <PrototypePanel title="Origem e descrição">
           <Stack spacing={1.5} sx={{ p: 2.5 }}>
             <DetailRow label="Origem" value={debt.source} />
-          <DetailRow label="Descrição" value={debt.description} />
+            <DetailRow label="Descrição" value={debt.description} />
           </Stack>
         </PrototypePanel>
         <PrototypePanel title="Locatário e contrato">

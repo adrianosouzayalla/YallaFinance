@@ -7,7 +7,10 @@ import { AccessDeniedPage } from "./AccessDeniedPage";
 import { HomeFallback } from "@/features/dashboard/components/HomeFallback";
 import { getRequiredFunctionality } from "./navigation";
 
-export function FunctionalityAccessBoundary({ children, session }: PropsWithChildren<{ session?: FinanceSession }>) {
+export function FunctionalityAccessBoundary({
+  children,
+  session,
+}: PropsWithChildren<{ session?: FinanceSession }>) {
   const pathname = usePathname();
   const required = getRequiredFunctionality(pathname);
   const functionalityCodes = session?.functionalityCodes ?? [];

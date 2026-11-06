@@ -1,5 +1,3 @@
-"use client";
-
 import { createTheme } from "@mui/material/styles";
 import { financeTokens } from "./designTokens";
 
@@ -45,6 +43,15 @@ export const theme = createTheme({
   },
   spacing: 2.88,
   components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: { backgroundColor: financeTokens.colors.canvas, color: financeTokens.colors.text },
+        ':where(a, button, input, select, textarea, [role="button"]):focus-visible': {
+          outline: `3px solid ${financeTokens.colors.action}`,
+          outlineOffset: 2,
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {

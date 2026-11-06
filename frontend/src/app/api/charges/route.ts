@@ -1,5 +1,5 @@
-import { authenticatedResponse } from "@/features/auth/server/session-boundary";
-import { chargesServerApi } from "@/features/charges/api/charges.server";
+import { authenticatedResponse } from "@/features/auth/server/sessionBoundary";
+import { chargesServerApi } from "@/services/api/charges/chargesApi.server";
 
 export async function POST(request: Request) {
   return authenticatedResponse(request, async (token) =>

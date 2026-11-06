@@ -7,7 +7,7 @@ import {
   useState,
   type PropsWithChildren,
 } from "react";
-import type { ChargeDraft } from "../types/charge.types";
+import type { ChargeDraft } from "@/services/api/charges/charge.types";
 
 interface ChargeDraftContext {
   draft: ChargeDraft | null;

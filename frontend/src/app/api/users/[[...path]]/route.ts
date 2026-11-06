@@ -1,7 +1,14 @@
-import { directoryProxy } from "@/features/users/server/directory-proxy";
+import { directoryProxy } from "@/features/users/server/directoryProxy";
 type Context = { params: Promise<{ path?: string[] }> };
-async function handle(request: Request, context: Context) {
+async function proxyUsersRequest(request: Request, context: Context) {
   return directoryProxy(request, "users", (await context.params).path ?? []);
 }
-export { handle as GET, handle as POST, handle as PUT };
-
+export function GET(request: Request, context: Context) {
+  return proxyUsersRequest(request, context);
+}
+export function POST(request: Request, context: Context) {
+  return proxyUsersRequest(request, context);
+}
+export function PUT(request: Request, context: Context) {
+  return proxyUsersRequest(request, context);
+}

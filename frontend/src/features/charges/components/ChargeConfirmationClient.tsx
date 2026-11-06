@@ -6,7 +6,7 @@ import { formatDate } from "@/utils/date";
 import { useChargeDraft } from "@/features/charges/context/ChargeDraftProvider";
 import { useChargeDebts } from "@/features/charges/hooks/useChargeDebts";
 import { useCreateCharge } from "@/features/charges/hooks/useCreateCharge";
-import { ChargeIntegrationError } from "@/features/charges/charge-integration-error";
+import { ChargeIntegrationError } from "@/services/api/charges/chargeIntegrationError";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
@@ -17,9 +17,9 @@ import { PrototypePanel } from "@/components/ui/PrototypePanel";
 import { ReadOnlyMappingPanel } from "@/features/charges/components/ReadOnlyMappingPanel";
 import { createIdempotencyKey } from "@/features/charges/chargeFlow";
 import { validateChargeDueDate } from "@/features/charges/businessRules";
-import type { ChargeDraft } from "@/features/charges/types/charge.types";
-import type { Debt } from "@/features/debts/types/debt.types";
-import type { FleetMovement } from "@/features/customers/types/customer.types";
+import type { ChargeDraft } from "@/services/api/charges/charge.types";
+import type { Debt } from "@/services/api/debts/debt.types";
+import type { FleetMovement } from "@/services/api/customers/customer.types";
 import { useToast } from "@/providers/ToastProvider";
 import { LoadingState } from "@/components/ui/LoadingState";
 
@@ -70,7 +70,8 @@ function reviewHrefForDraft(draft: ChargeDraft): string {
 export function ChargeConfirmationClient() {
   const router = useRouter();
   const { draft } = useChargeDraft();
-  const availableDebts = useChargeDebts(draft?.source === "selected" ? draft.debtIds : []).data?.items ?? emptyDebts;
+  const availableDebts =
+    useChargeDebts(draft?.source === "selected" ? draft.debtIds : []).data?.items ?? emptyDebts;
   const creation = useCreateCharge();
   const { showToast } = useToast();
   const [pending, setPending] = useState(false);
@@ -154,68 +155,66 @@ export function ChargeConfirmationClient() {
 
   return (
     <>
-    <LoadingState mode="blocking" open={pending} message="Gerando cobrança..." />
-    <Stack spacing={3}>
-      <FinancePageTitle
-        navigationHref="/charges/new"
-      >
-        Confirmar cobrança
-      </FinancePageTitle>
-      <ChargeStepper activeStep={2} />
-      {error ? (
-        <Alert severity="error">
-          {error}
-          {creation.error instanceof ChargeIntegrationError ? (
-            <Typography variant="body2">Número da cobrança: {creation.error.charge.reference}</Typography>
-          ) : null}
-        </Alert>
-      ) : null}
-      <Box
-        sx={{ display: "grid", gap: 3, gridTemplateColumns: "minmax(0, 1fr) minmax(340px, 1fr)" }}
-      >
-        <PrototypePanel title="Resumo da cobrança">
-          <Stack spacing={1.5} sx={{ p: 2.5 }}>
-            {summaryRows.map(([label, value]) => (
-              <Box
-                key={label}
-                sx={{
-                  display: "grid",
-                  gap: 2,
-                  gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
-                }}
-              >
-                <Typography color="text.secondary">{label}</Typography>
-                <Typography
-                  sx={{ fontWeight: label === "Total a cobrar" ? 700 : 500, textAlign: "right" }}
+      <LoadingState mode="blocking" open={pending} message="Gerando cobrança..." />
+      <Stack spacing={3}>
+        <FinancePageTitle navigationHref="/charges/new">Confirmar cobrança</FinancePageTitle>
+        <ChargeStepper activeStep={2} />
+        {error ? (
+          <Alert severity="error">
+            {error}
+            {creation.error instanceof ChargeIntegrationError ? (
+              <Typography variant="body2">
+                Número da cobrança: {creation.error.charge.reference}
+              </Typography>
+            ) : null}
+          </Alert>
+        ) : null}
+        <Box
+          sx={{ display: "grid", gap: 3, gridTemplateColumns: "minmax(0, 1fr) minmax(340px, 1fr)" }}
+        >
+          <PrototypePanel title="Resumo da cobrança">
+            <Stack spacing={1.5} sx={{ p: 2.5 }}>
+              {summaryRows.map(([label, value]) => (
+                <Box
+                  key={label}
+                  sx={{
+                    display: "grid",
+                    gap: 2,
+                    gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
+                  }}
                 >
-                  {value}
-                </Typography>
-              </Box>
-            ))}
+                  <Typography color="text.secondary">{label}</Typography>
+                  <Typography
+                    sx={{ fontWeight: label === "Total a cobrar" ? 700 : 500, textAlign: "right" }}
+                  >
+                    {value}
+                  </Typography>
+                </Box>
+              ))}
+            </Stack>
+          </PrototypePanel>
+          <ReadOnlyMappingPanel
+            category={
+              currentDraft.source === "selected"
+                ? (debt?.category ?? "")
+                : currentDraft.standalone.category
+            }
+            description={description}
+            movement={movementForDraft(currentDraft, debt)}
+            variant="review"
+          />
+        </Box>
+        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <Stack direction="row" spacing={1.5}>
+            <Button component={Link} href={reviewHrefForDraft(draft)} variant="outlined">
+              ‹ Voltar
+            </Button>
+            <Button disabled={pending} onClick={() => void confirm()} variant="contained">
+              {pending ? "Gerando cobrança..." : "Gerar cobrança"}
+            </Button>
           </Stack>
-        </PrototypePanel>
-        <ReadOnlyMappingPanel
-          category={
-            currentDraft.source === "selected"
-              ? (debt?.category ?? "")
-              : currentDraft.standalone.category
-          }
-          description={description}
-          movement={movementForDraft(currentDraft, debt)}
-          variant="review"
-        />
-      </Box>
-      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <Stack direction="row" spacing={1.5}>
-          <Button component={Link} href={reviewHrefForDraft(draft)} variant="outlined">
-            ‹ Voltar
-          </Button>
-          <Button disabled={pending} onClick={() => void confirm()} variant="contained">
-            {pending ? "Gerando cobrança..." : "Gerar cobrança"}
-          </Button>
-        </Stack>
-      </Box>
-    </Stack>
+        </Box>
+      </Stack>
     </>
   );
 }

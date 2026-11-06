@@ -9,7 +9,7 @@ import {
   formatExactCurrencyInput,
 } from "@/utils/currency";
 
-export type CurrencyFieldProps = Omit<
+type CurrencyFieldProps = Omit<
   TextFieldProps,
   "value" | "defaultValue" | "onChange" | "type" | "select" | "multiline"
 > &

@@ -1,7 +1,6 @@
-"use client";
 import { useQuery } from "@tanstack/react-query";
 import { useSessionContext } from "@/features/auth/context/SessionProvider";
-import { debtsApi } from "@/features/debts/api/debts.client";
+import { debtsApi } from "@/services/api/debts/debtsApi.client";
 export function useChargeDebts(debtIds: string[] = []) {
   const { tenantId, contextId } = useSessionContext();
   const ids = [...new Set(debtIds)].sort();

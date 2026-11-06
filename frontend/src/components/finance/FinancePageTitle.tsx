@@ -6,7 +6,13 @@ type FinancePageTitleProps = Omit<TypographyProps<"h1">, "component"> & {
   navigationHref: FinanceNavigationItem["href"];
 };
 
-export function FinancePageTitle({ navigationHref, children, sx, variant = "h1", ...props }: FinancePageTitleProps) {
+export function FinancePageTitle({
+  navigationHref,
+  children,
+  sx,
+  variant = "h1",
+  ...props
+}: FinancePageTitleProps) {
   const { Icon } = getActiveNavigationItem(navigationHref);
   return (
     <Typography
@@ -14,7 +20,13 @@ export function FinancePageTitle({ navigationHref, children, sx, variant = "h1",
       component="h1"
       variant={variant}
       sx={[
-        { display: "flex", alignItems: "center", gap: 1.5, color: financeTokens.colors.header, fontWeight: 700 },
+        {
+          display: "flex",
+          alignItems: "center",
+          gap: 1.5,
+          color: financeTokens.colors.header,
+          fontWeight: 700,
+        },
         ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
       ]}
     >

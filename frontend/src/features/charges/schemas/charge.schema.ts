@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { getChargeToday, validateStandaloneDraft, validateChargeDueDate } from "../businessRules";
-import type { FieldErrors, StandaloneChargeDraft } from "../types/charge.types";
-import type { DebtCategory } from "@/features/debts/types/debt.types";
+import type { FieldErrors, StandaloneChargeDraft } from "@/services/api/charges/charge.types";
+import type { DebtCategory } from "@/services/api/debts/debt.types";
 
 export function getStandaloneFieldErrors(draft: StandaloneChargeDraft): FieldErrors {
   const errors = validateStandaloneDraft(draft, getChargeToday());
@@ -34,7 +34,12 @@ export const standaloneChargeSchema = z
   });
 
 export const paymentSchema = z
-  .object({ method: z.literal("Pix").optional(), paymentMethodId: z.string().optional(), dueDate: z.string(), customerNote: z.string() })
+  .object({
+    method: z.literal("Pix").optional(),
+    paymentMethodId: z.string().optional(),
+    dueDate: z.string(),
+    customerNote: z.string(),
+  })
   .superRefine((payment, context) => {
     const message = validateChargeDueDate(payment.dueDate);
     if (message) context.addIssue({ code: "custom", path: ["dueDate"], message });

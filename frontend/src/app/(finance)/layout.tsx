@@ -29,7 +29,11 @@ export default async function FinanceLayout({ children }: LayoutProps<"/">) {
   return (
     <SessionProvider
       key={sessionProfile.contextId}
-      session={{ tenantId: sessionProfile.tenantId ?? "", contextId: sessionProfile.contextId!, userId: sessionProfile.userId }}
+      session={{
+        tenantId: sessionProfile.tenantId ?? "",
+        contextId: sessionProfile.contextId!,
+        userId: sessionProfile.userId,
+      }}
     >
       <SessionGuard>
         <FinanceShell session={financeSession}>{children}</FinanceShell>

@@ -47,9 +47,13 @@ export function SelectionBar({
           <Typography sx={{ fontSize: financeTokens.typography.body, fontWeight: 700 }}>
             {count} {count === 1 ? "débito selecionado" : "débitos selecionados"}
           </Typography>
-          <Typography sx={{ fontSize: financeTokens.typography.secondary }}>Total: {total}</Typography>
+          <Typography sx={{ fontSize: financeTokens.typography.secondary }}>
+            Total: {total}
+          </Typography>
           {tenantName ? (
-            <Typography sx={{ fontSize: financeTokens.typography.secondary }}>Locatário: {tenantName}</Typography>
+            <Typography sx={{ fontSize: financeTokens.typography.secondary }}>
+              Locatário: {tenantName}
+            </Typography>
           ) : null}
         </Stack>
         <Stack direction="row" spacing={1}>

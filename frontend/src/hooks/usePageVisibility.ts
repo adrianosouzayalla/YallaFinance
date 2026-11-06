@@ -1,4 +1,3 @@
-"use client";
 import { useSyncExternalStore } from "react";
 
 const subscribe = (callback: () => void) => {

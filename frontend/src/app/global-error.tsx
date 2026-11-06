@@ -12,7 +12,13 @@ export default function GlobalError({
   return (
     <html lang="pt-BR">
       <body style={{ margin: 0, width: "100%", minHeight: "100dvh", overflowX: "hidden" }}>
-        <div style={{ zoom: financeTokens.uiScale, width: "125vw", minHeight: financeTokens.shell.viewportHeight }}>
+        <div
+          style={{
+            zoom: financeTokens.uiScale,
+            width: "125vw",
+            minHeight: financeTokens.shell.viewportHeight,
+          }}
+        >
           <Stack
             sx={{
               alignItems: "center",
@@ -33,7 +39,11 @@ export default function GlobalError({
               <Stack sx={{ alignItems: "center", gap: 1.5 }}>
                 <Typography
                   component="h1"
-                  sx={{ color: financeTokens.colors.header, fontSize: financeTokens.typography.pageTitle, fontWeight: 700 }}
+                  sx={{
+                    color: financeTokens.colors.header,
+                    fontSize: financeTokens.typography.pageTitle,
+                    fontWeight: 700,
+                  }}
                 >
                   Yalla Finance
                 </Typography>

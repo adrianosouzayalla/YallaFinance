@@ -1,11 +1,15 @@
-"use client";
 import { useEffect, useRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSessionContext } from "@/features/auth/context/SessionProvider";
-import { jobsApi } from "../api/jobs.client";
+import { jobsApi } from "@/services/api/jobs/jobsApi.client";
 import { useJobMonitoringVisibility } from "./useJobMonitoringVisibility";
-import type { JobStatus } from "../types/job.types";
-export function useJobExecutions(id: string, page: number, status?: JobStatus, sort?: { key: string; direction: "asc" | "desc" }) {
+import type { JobStatus } from "@/services/api/jobs/job.types";
+export function useJobExecutions(
+  id: string,
+  page: number,
+  status?: JobStatus,
+  sort?: { key: string; direction: "asc" | "desc" },
+) {
   const { tenantId, contextId } = useSessionContext();
   const visible = useJobMonitoringVisibility();
   const client = useQueryClient();

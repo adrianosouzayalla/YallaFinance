@@ -1,7 +1,8 @@
-export const debtStatuses = ["Open", "InCollection", "Paid", "Canceled"] as const;
-export type DebtStatus = (typeof debtStatuses)[number];
+import { debtStatuses, type DebtStatus } from "@/services/api/debts/debt.types";
+export { debtStatuses };
+export type { DebtStatus };
 
-export const debtStatusLabels: Record<DebtStatus, string> = {
+const debtStatusLabels: Record<DebtStatus, string> = {
   Open: "Em aberto",
   InCollection: "Em cobrança",
   Paid: "Quitado",

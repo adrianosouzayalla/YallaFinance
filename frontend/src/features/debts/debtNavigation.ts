@@ -1,7 +1,7 @@
 import { validateDebtSelection } from "@/features/charges/businessRules";
-import type { Debt } from "@/features/debts/types/debt.types";
+import type { Debt } from "@/services/api/debts/debt.types";
 
-export type SelectedDebtResolution = { ok: true; debts: Debt[] } | { ok: false; message: string };
+type SelectedDebtResolution = { ok: true; debts: Debt[] } | { ok: false; message: string };
 
 const invalidSelectionMessage = "Selecione débitos em aberto de um único locatário";
 

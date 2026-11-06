@@ -1108,6 +1108,32 @@ DataProvider
 
 quando existir um nome que represente diretamente a responsabilidade.
 
+## 20.1 Decisões de organização (Feature 30)
+
+Decisões aprovadas pelo responsável em 04/11/2026. Ver `FEATURES/30 - Organização FrontEnd/`.
+
+| Código | Decisão | Situação |
+|---|---|---|
+| D1 | Componentes React em `PascalCase.tsx`; hooks em `useAlgo.ts`; demais módulos TypeScript em `camelCase.ts`. Arquivos de rota mantêm os nomes exigidos pelo Next. | Aprovada |
+| D2 | Chamadas ao backend ficam em `services/api/<domínio>/`, com `<domínio>Api.client.ts` (navegador, passa pelo BFF) e `<domínio>Api.server.ts` (servidor, `server-only`, chama a API .NET). Tipos de endpoint ficam em `services/api/<domínio>/`. Componentes e hooks não escrevem caminho de API. Cada endpoint compartilhado entre telas tem um único domínio dono. | Aprovada |
+| D3 | `components/ui`, `hooks`, `utils`, `services`, `theme` e `providers` não importam de `features/`. Uma feature não importa componentes ou APIs de outra feature; código compartilhado sobe para o compartilhado. | Aprovada |
+| D4 | Rotas de `app/api` exportam uma função por método HTTP (`GET`, `POST`, `PUT`, ...). Não usar função genérica `handle`. | Aprovada |
+| D5 | Handlers locais recebem nome da ação completa (`handleCopyPix`); callbacks recebidos por props usam `onAlgo`. | Aprovada |
+| D6 | Componente acima de cerca de 300 linhas deve ser revisado para divisão. Gatilho de revisão, não limite rígido. | Aprovada |
+| D7 | Testes ficam ao lado do código testado. Helpers compartilhados de teste ficam em `src/test/`. Fixtures não ficam em código de produção. | Aprovada |
+| D8 | Formatação com Prettier (`.prettierrc.json`) e `.editorconfig` (UTF-8, LF, 2 espaços em TS/TSX/JS/JSON/CSS), aplicada em alteração isolada. Todo o `src` segue o padrão. | Aprovada |
+| D9 | Um único componente de status em `components/ui`, que recebe rótulo e tom; o mapeamento de status fica em cada domínio. | Aprovada |
+| D10 | Módulos que só exportam funções não usam `"use client"`; a diretiva marca apenas a fronteira de componentes. | Aprovada |
+
+Nota: a estrutura de chamadas ao backend segue a D2 (`services/api/debts/debtsApi.client.ts`), e não o exemplo `debts.api.ts` desta seção.
+
+## 20.2 Estilos e tokens (Feature 30, fase 7)
+
+- Toda estilização fica em `src/theme/`: `designTokens.ts` (tokens), `theme.ts` (tema do MUI e `CssBaseline`), `checkoutTheme.ts` e `checkoutStyles.ts` (checkout), `layout.ts` (espaçamentos e grades) e `styles/` (CSS globais e do loader).
+- Não há cor, sombra, transparência ou hexadecimal literal fora de `src/theme/`. Novos valores entram como token com nome pelo papel na interface.
+- Telas do app usam `financeTokens.colors` e `financeTokens.overlays`/`shadows`. O checkout público usa `checkoutColors` (alias de `financeTokens.checkoutPalette`).
+- Bordas e textos compostos usam template literal com o token, ex.: `` `1px solid ${financeTokens.colors.listDivider}` ``.
+
 ------------------------------------------------------------------------
 
 # 21. Regra de proximidade

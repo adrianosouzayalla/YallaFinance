@@ -1,9 +1,9 @@
 import { Button, FormControl, InputLabel, Select, Stack } from "@mui/material";
 import { DateField } from "@/components/forms/DateField";
 import { debtStatuses, getDebtStatusLabel } from "@/features/debts/debtStatus";
-import type { DebtFilters as DebtFiltersValue } from "@/features/debts/types/debt.types";
+import type { DebtFilters as DebtFiltersValue } from "@/services/api/debts/debt.types";
 import type { DebtStatus } from "@/features/debts/debtStatus";
-import type { CategoryOption } from "@/features/catalogs/types/catalog.types";
+import type { CategoryOption } from "@/services/api/catalogs/catalog.types";
 
 interface DebtFiltersProps {
   disabled?: boolean;

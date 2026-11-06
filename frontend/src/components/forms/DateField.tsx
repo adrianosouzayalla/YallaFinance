@@ -5,7 +5,7 @@ import { TextField, type TextFieldProps } from "@mui/material";
 import { PatternFormat } from "react-number-format";
 import { formatDate, parseDateInput } from "@/utils/date";
 
-export type DateFieldProps = Omit<
+type DateFieldProps = Omit<
   TextFieldProps,
   "value" | "defaultValue" | "onChange" | "type" | "select" | "multiline"
 > & {
@@ -43,9 +43,7 @@ function NativeDateField({ value, onChange, min, max, slotProps, ...props }: Dat
           const shrink = labelProps && "shrink" in labelProps ? labelProps.shrink : true;
           return {
             ...((props.variant ?? "outlined") === "outlined" ? { notched: shrink ?? true } : {}),
-            ...(typeof slotProps?.input === "function"
-              ? slotProps.input(state)
-              : slotProps?.input),
+            ...(typeof slotProps?.input === "function" ? slotProps.input(state) : slotProps?.input),
           };
         },
         htmlInput: (state) => ({

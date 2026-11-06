@@ -1,9 +1,8 @@
-"use client";
 import { useCallback } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { standaloneChargeSchema } from "../schemas/charge.schema";
-import type { FieldErrors, StandaloneChargeDraft } from "../types/charge.types";
+import type { FieldErrors, StandaloneChargeDraft } from "@/services/api/charges/charge.types";
 
 export function useStandaloneChargeForm(defaultValues: StandaloneChargeDraft) {
   const form = useForm<StandaloneChargeDraft>({

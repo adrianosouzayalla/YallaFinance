@@ -1,7 +1,6 @@
-"use client";
 import { useQuery } from "@tanstack/react-query";
 import { useSessionContext } from "@/features/auth/context/SessionProvider";
-import { jobsApi } from "../api/jobs.client";
+import { jobsApi } from "@/services/api/jobs/jobsApi.client";
 import { useJobMonitoringVisibility } from "./useJobMonitoringVisibility";
 export function useJob(id: string) {
   const { tenantId, contextId } = useSessionContext();

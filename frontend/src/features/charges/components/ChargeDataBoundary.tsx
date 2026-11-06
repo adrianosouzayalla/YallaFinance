@@ -10,9 +10,12 @@ export function ChargeDataBoundary({ children }: PropsWithChildren) {
   const params = useSearchParams();
   const { draft } = useChargeDraft();
   const source = params.get("source");
-  const ids = source === "selected"
-    ? (params.get("debtIds") ?? "").split(",").filter(Boolean)
-    : source === null && draft?.source === "selected" ? draft.debtIds : [];
+  const ids =
+    source === "selected"
+      ? (params.get("debtIds") ?? "").split(",").filter(Boolean)
+      : source === null && draft?.source === "selected"
+        ? draft.debtIds
+        : [];
   const query = useChargeDebts(ids);
   if (ids.length === 0) return children;
   if (!query.data && query.isFetching)
@@ -26,6 +29,7 @@ export function ChargeDataBoundary({ children }: PropsWithChildren) {
         Não foi possível carregar os débitos. Tente novamente.
       </Alert>
     );
-  if (!query.data) return <LoadingState mode="blocking" message="Carregando dados financeiros..." />;
+  if (!query.data)
+    return <LoadingState mode="blocking" message="Carregando dados financeiros..." />;
   return children;
 }

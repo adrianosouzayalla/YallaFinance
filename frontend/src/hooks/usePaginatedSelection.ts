@@ -1,5 +1,3 @@
-"use client";
-
 import { useCallback, useState, type SetStateAction } from "react";
 
 /** Stores selected records independently of the visible page. The caller owns the reset scope. */

@@ -1,9 +1,12 @@
-"use client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSessionContext } from "@/features/auth/context/SessionProvider";
-import { chargesApi } from "../api/charges.client";
-import type { Charge, ChargeDraft, CreateDirectChargeRequest } from "../types/charge.types";
-import { ChargeIntegrationError } from "../charge-integration-error";
+import { chargesApi } from "@/services/api/charges/chargesApi.client";
+import type {
+  Charge,
+  ChargeDraft,
+  CreateDirectChargeRequest,
+} from "@/services/api/charges/charge.types";
+import { ChargeIntegrationError } from "@/services/api/charges/chargeIntegrationError";
 
 export function useSubmitDirectCharge() {
   const { tenantId, contextId } = useSessionContext();

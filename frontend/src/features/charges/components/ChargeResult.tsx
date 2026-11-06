@@ -6,14 +6,14 @@ import { Alert, Box, Button, Divider, Stack, Typography } from "@mui/material";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import { PrototypePanel } from "@/components/ui/PrototypePanel";
 import { PaymentChargeSummary } from "@/features/payments/components/PaymentChargeSummary";
-import type { PaymentCharge } from "@/features/payments/types/payment.types";
+import type { PaymentCharge } from "@/services/api/payments/payment.types";
 import { formatCurrency } from "@/utils/currency";
 import { formatDate } from "@/utils/date";
-import type { Charge } from "../types/charge.types";
+import type { Charge } from "@/services/api/charges/charge.types";
 import { ChargeItemPostings, type ChargePostingItem } from "./ChargeItemPostings";
 import { ChargeProcessingPanel } from "./ChargeProcessingPanel";
 
-export interface ChargeResultData {
+interface ChargeResultData {
   reference?: string;
   amount: number;
   formattedAmount?: string;

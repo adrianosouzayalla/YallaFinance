@@ -6,8 +6,8 @@ import "@fontsource/inter/600.css";
 import "@fontsource/inter/700.css";
 import { AppProviders } from "@/providers/AppProviders";
 import { financeTokens } from "@/theme/designTokens";
-import "../components/ui/YallaCamelLoader.css";
-import "./globals.css";
+import "@/theme/styles/yallaCamelLoader.css";
+import "@/theme/styles/globals.css";
 
 export const metadata: Metadata = {
   title: "Yalla Finance",

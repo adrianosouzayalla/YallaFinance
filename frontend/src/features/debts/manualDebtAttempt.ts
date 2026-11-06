@@ -1,5 +1,5 @@
-import { manualDebtSchema } from "./schemas/manual-debt.schema";
-import type { ManualDebtInput } from "./types/manual-debt.types";
+import { manualDebtSchema } from "@/services/api/debts/manualDebt.schema";
+import type { ManualDebtInput } from "@/services/api/debts/manualDebt.types";
 
 export function readManualDebtAttempt(key: string): ManualDebtInput | null {
   if (typeof window === "undefined") return null;
